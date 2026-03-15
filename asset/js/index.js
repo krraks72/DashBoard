@@ -31,6 +31,37 @@ function dashboardApp() {
       if (page === 'dashboard') { this.$nextTick(() => this.initCharts()); }
     },
 
+
+    getBasePath() {
+      const path = window.location.pathname;
+      const fileName = '/index';
+      const index = path.lastIndexOf(fileName);
+      if (index === -1) {
+        return '';
+      }
+
+      return path.slice(0, index);
+    },
+
+    buildUrl(relativePath) {
+      return `${this.getBasePath()}${relativePath}`;
+    },
+
+    async logout() {
+      try {
+        const response = await fetch(this.buildUrl('/auth/logout.php'), { method: 'POST' });
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || 'No se pudo cerrar la sesión');
+        }
+
+        window.location.href = this.buildUrl(`/${result.redirect || 'login.php'}`);
+      } catch (error) {
+        alert(error.message || 'Error cerrando la sesión');
+      }
+    },
+
     toggleSidebar() {
       if (this.isMobile) { this.mobileSidebarOpen = !this.mobileSidebarOpen; }
       else { this.sidebarCollapsed = !this.sidebarCollapsed; }
