@@ -7,12 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    input[type="password"]::-ms-reveal,
-    input[type="password"]::-ms-clear {
-      display: none;
-    }
-  </style>  
+  <link rel="stylesheet" href="asset/css/login.css">  
 </head>
 <body>
   <div x-data="authPage()" class="min-h-screen bg-gray-100">
@@ -165,40 +160,6 @@
     </div>
   </div>
 
-  <script>
-    document.addEventListener('alpine:init', () => {
-      Alpine.data('authPage', () => ({
-        isLogin: true,
-        showPassword: false,
-        showConfirmPassword: false,
-        email: '',
-        password: '',
-        confirmPassword: '',
-        name: '',
-        loading: false,
-
-        validateEmail(email) {
-          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-        },
-
-        validatePassword(password) {
-          return password.length >= 8;
-        },
-
-        validateConfirmPassword() {
-          return this.password === this.confirmPassword;
-        },
-
-        handleSubmit() {
-          this.loading = true;
-          // Simulate API call
-          setTimeout(() => {
-            this.loading = false;
-            alert(this.isLogin ? 'Logged in successfully!' : 'Registered successfully!');
-          }, 1500);
-        }
-      }));
-    });
-  </script>
+  <script src="asset/js/login.js"></script>
 </body>
 </html>
