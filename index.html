@@ -1,843 +1,2188 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id" x-data="dashboardApp()" :class="{ 'dark': darkMode }">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Analytics - Dashboard</title>
-<meta name="description" content="Analytics dashboard">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<title>EVDesign Admin Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style type="text/tailwindcss">
-  @theme inline {
-    --color-primary: var(--primary);
-    --color-primary-hover: var(--primary-hover);
-    --color-foreground: var(--foreground);
-    --color-muted: var(--muted);
-    --color-border: var(--border);
-    --color-accent-lime: var(--accent-lime);
-    --color-accent-teal: var(--accent-teal);
-    --color-accent-peach: var(--accent-peach);
-    --color-success: var(--success);
-    --color-success-light: var(--success-light);
-    --color-success-dark: var(--success-dark);
-    --color-error: var(--error);
-    --color-error-light: var(--error-light);
-    --color-error-dark: var(--error-dark);
-    --color-warning: var(--warning);
-    --color-warning-light: var(--warning-light);
-    --color-warning-dark: var(--warning-dark);
-    --color-info: var(--info);
-    --color-info-light: var(--info-light);
-    --color-info-dark: var(--info-dark);
-    --color-alert: var(--alert);
-    --color-alert-light: var(--alert-light);
-    --color-alert-dark: var(--alert-dark);
-    --color-gray-50: var(--gray-50);
-    --color-gray-100: var(--gray-100);
-    --color-gray-200: var(--gray-200);
-    --color-gray-500: var(--gray-500);
-    --color-gray-600: var(--gray-600);
-    --color-gray-700: var(--gray-700);
-    --font-sans: var(--font-sans);
-    --radius-card: 20px;
-    --radius-button: 16px;
-    --radius-icon: 22px;
-  }
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<style>
   :root {
-    --primary: #EF3F09;
-    --primary-hover: #d63608;
-    --foreground: #0C1C3C;
-    --muted: #F7F7F7;
-    --border: #DCDEDD;
-    --accent-lime: #C5E151;
-    --accent-teal: #82D9D7;
-    --accent-peach: #FAAC7B;
-    --success: #22C55E;
-    --success-light: #DCFCE7;
-    --success-dark: #166534;
-    --error: #EF4444;
-    --error-light: #FEE2E2;
-    --error-dark: #991B1B;
-    --warning: #EAB308;
-    --warning-light: #FEF9C3;
-    --warning-dark: #854D0E;
-    --info: #3B82F6;
-    --info-light: #DBEAFE;
-    --info-dark: #1E40AF;
-    --alert: #F97316;
-    --alert-light: #FFEDD5;
-    --alert-dark: #9A3412;
-    --gray-50: #F9FAFB;
-    --gray-100: #F3F4F6;
-    --gray-200: #E5E7EB;
-    --gray-500: #6B7280;
-    --gray-600: #4B5563;
-    --gray-700: #374151;
-    --font-sans: 'Plus Jakarta Sans', sans-serif;
+    --primary: #fc1919;
+    --primary-dark: #e01414;
+    --primary-10: rgba(252,25,25,0.10);
+    --primary-05: rgba(252,25,25,0.05);
+    --bg: #F8F9FA;
+    --surface: #FFFFFF;
+    --text: #212529;
+    --text-sec: #495057;
+    --text-light: #6C757D;
+    --border: #E9ECEF;
+    --border-light: #F1F3F5;
+    --success: #28A745;
+    --danger: #DC3545;
+    --warning: #FFC107;
+    --info: #17A2B8;
+    --sidebar-w: 280px;
+    --sidebar-collapsed: 80px;
+    --header-h: 72px;
   }
-  select {
-    @apply appearance-none bg-no-repeat cursor-pointer;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-    background-position: right 10px center;
-    padding-right: 40px;
+  .dark {
+    --bg: #121212;
+    --surface: #1E1E1E;
+    --text: #F1F5F9;
+    --text-sec: #CBD5E1;
+    --text-light: #94A3B8;
+    --border: #334155;
+    --border-light: #2D3748;
+    --primary-10: rgba(252,25,25,0.15);
+    --primary-05: rgba(252,25,25,0.08);
   }
-  .scrollbar-hide::-webkit-scrollbar { display: none; }
-  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { font-size:16px; }
+  body {
+    font-family:'Plus Jakarta Sans',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    transition:background 0.3s,color 0.3s;
+  }
+  .mono { font-family:'JetBrains Mono',monospace; }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    position:fixed; left:0; top:0; height:100vh;
+    width:var(--sidebar-w);
+    background:var(--surface);
+    border-right:1px solid var(--border);
+    display:flex; flex-direction:column;
+    transition:width 0.3s cubic-bezier(.4,0,.2,1), transform 0.3s;
+    z-index:100; overflow:hidden;
+  }
+  .sidebar.collapsed { width:var(--sidebar-collapsed); }
+  .sidebar.mobile-hidden { transform:translateX(-100%); }
+
+  .sidebar-logo {
+    padding:20px 20px 16px;
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:12px;
+    min-height:72px; overflow:hidden;
+  }
+  .logo-icon {
+    width:40px; height:40px; min-width:40px;
+    background:var(--primary);
+    border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .logo-text { overflow:hidden; white-space:nowrap; }
+  .logo-text h2 { font-size:1rem; font-weight:700; color:var(--text); line-height:1.2; }
+  .logo-text span { font-size:0.75rem; color:var(--text-light); }
+
+  .sidebar-nav { flex:1; padding:12px 12px; overflow-y:auto; }
+  .nav-section-title {
+    font-size:0.65rem; font-weight:600; text-transform:uppercase;
+    letter-spacing:1px; color:var(--text-light);
+    padding:8px 8px 4px; margin-top:4px;
+    white-space:nowrap; overflow:hidden;
+    transition:opacity 0.2s;
+  }
+  .sidebar.collapsed .nav-section-title { opacity:0; }
+
+  .nav-item {
+    display:flex; align-items:center; gap:12px;
+    padding:10px 12px; border-radius:10px;
+    cursor:pointer; transition:all 0.2s;
+    white-space:nowrap; overflow:hidden;
+    color:var(--text-sec); font-size:0.9rem; font-weight:500;
+    text-decoration:none; margin-bottom:2px;
+    position:relative;
+  }
+  .nav-item:hover { background:var(--primary-10); color:var(--primary); }
+  .nav-item.active {
+    background:var(--primary-10); color:var(--primary);
+    font-weight:600;
+  }
+  .nav-item.active::before {
+    content:''; position:absolute; left:0; top:50%; transform:translateY(-50%);
+    width:3px; height:60%; background:var(--primary); border-radius:0 4px 4px 0;
+  }
+  .nav-item iconify-icon { min-width:20px; font-size:20px; }
+  .nav-text { overflow:hidden; transition:opacity 0.2s; }
+  .sidebar.collapsed .nav-text { opacity:0; width:0; }
+
+  .sidebar-profile {
+    padding:16px;
+    border-top:1px solid var(--border);
+    display:flex; align-items:center; gap:10px;
+    overflow:hidden;
+  }
+  .avatar {
+    width:36px; height:36px; min-width:36px;
+    border-radius:50%; background:var(--primary);
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-weight:700; font-size:0.85rem;
+  }
+  .profile-info { overflow:hidden; white-space:nowrap; }
+  .profile-info strong { font-size:0.85rem; display:block; color:var(--text); }
+  .profile-info span { font-size:0.75rem; color:var(--text-light); }
+
+  /* ===== HEADER ===== */
+  .header {
+    position:fixed; top:0; right:0;
+    left:var(--sidebar-w);
+    height:var(--header-h);
+    background:var(--surface);
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center;
+    padding:0 24px; gap:16px; z-index:99;
+    transition:left 0.3s;
+  }
+  .header.sidebar-collapsed { left:var(--sidebar-collapsed); }
+  .header.sidebar-hidden { left:0; }
+
+  .header-title { flex:1; }
+  .header-title h1 { font-size:1.15rem; font-weight:700; color:var(--text); }
+  .breadcrumb { font-size:0.78rem; color:var(--text-light); margin-top:1px; }
+  .breadcrumb span { color:var(--primary); }
+
+  .search-bar {
+    display:flex; align-items:center; gap:8px;
+    background:var(--bg); border:1px solid var(--border);
+    border-radius:10px; padding:8px 14px;
+    width:260px; transition:all 0.2s;
+  }
+  .search-bar:focus-within { border-color:var(--primary); box-shadow:0 0 0 3px var(--primary-10); }
+  .search-bar input {
+    background:transparent; border:none; outline:none;
+    font-size:0.875rem; color:var(--text); width:100%;
+    font-family:'Plus Jakarta Sans',sans-serif;
+  }
+  .search-bar input::placeholder { color:var(--text-light); }
+
+  .header-btn {
+    width:40px; height:40px; border-radius:10px;
+    background:var(--bg); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:all 0.2s; color:var(--text-sec);
+    position:relative;
+  }
+  .header-btn:hover { background:var(--primary-10); color:var(--primary); border-color:var(--primary); }
+  .badge {
+    position:absolute; top:-4px; right:-4px;
+    width:18px; height:18px; border-radius:50%;
+    background:var(--primary); color:#fff;
+    font-size:0.6rem; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+    border:2px solid var(--surface);
+  }
+  .datetime { font-size:0.78rem; color:var(--text-light); text-align:right; white-space:nowrap; }
+
+  /* ===== MAIN ===== */
+  .main {
+    margin-left:var(--sidebar-w);
+    padding-top:var(--header-h);
+    transition:margin-left 0.3s;
+    min-height:100vh;
+  }
+  .main.sidebar-collapsed { margin-left:var(--sidebar-collapsed); }
+  .main.sidebar-hidden { margin-left:0; }
+  .content { padding:24px; }
+
+  /* ===== CARDS ===== */
+  .card {
+    background:var(--surface);
+    border-radius:16px;
+    padding:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.03), 0 4px 12px rgba(0,0,0,0.05);
+    transition:box-shadow 0.2s, transform 0.2s;
+  }
+  .card:hover { box-shadow:0 4px 16px rgba(0,0,0,0.08); }
+
+  .stat-card {
+    background:var(--surface);
+    border-radius:16px;
+    padding:20px;
+    border-left:4px solid var(--primary);
+    box-shadow:0 2px 8px rgba(0,0,0,0.03), 0 4px 12px rgba(0,0,0,0.05);
+    display:flex; flex-direction:column; gap:12px;
+    transition:all 0.2s;
+  }
+  .stat-card:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(252,25,25,0.12); }
+  .stat-card.warning { border-left-color:var(--warning); }
+  .stat-card.success { border-left-color:var(--success); }
+  .stat-card.info { border-left-color:var(--info); }
+
+  .stat-icon {
+    width:44px; height:44px; border-radius:12px;
+    background:var(--primary-10); display:flex;
+    align-items:center; justify-content:center;
+    color:var(--primary);
+  }
+  .stat-card.warning .stat-icon { background:rgba(255,193,7,0.1); color:var(--warning); }
+  .stat-card.success .stat-icon { background:rgba(40,167,69,0.1); color:var(--success); }
+  .stat-card.info .stat-icon { background:rgba(23,162,184,0.1); color:var(--info); }
+
+  .stat-label { font-size:0.8rem; color:var(--text-light); font-weight:500; }
+  .stat-value { font-size:2rem; font-weight:700; color:var(--primary); font-family:'JetBrains Mono',monospace; line-height:1; }
+  .stat-card.warning .stat-value { color:var(--warning); }
+  .stat-card.success .stat-value { color:var(--success); }
+  .stat-card.info .stat-value { color:var(--info); }
+
+  .trend {
+    font-size:0.78rem; font-weight:600;
+    display:flex; align-items:center; gap:4px;
+  }
+  .trend.up { color:var(--success); }
+  .trend.down { color:var(--danger); }
+  .trend.warn { color:var(--warning); }
+
+  /* ===== GRIDS ===== */
+  .grid-6 { display:grid; grid-template-columns:repeat(6,1fr); gap:20px; }
+  .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+  .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+  .grid-1-2 { display:grid; grid-template-columns:1fr 2fr; gap:20px; }
+  .grid-2-1 { display:grid; grid-template-columns:2fr 1fr; gap:20px; }
+  .grid-3-2 { display:grid; grid-template-columns:3fr 2fr; gap:20px; }
+  .col-span-2 { grid-column:span 2; }
+  .col-span-3 { grid-column:span 3; }
+  .col-span-4 { grid-column:span 4; }
+  .col-span-6 { grid-column:span 6; }
+
+  /* ===== SECTION HEADER ===== */
+  .section-header {
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:20px;
+  }
+  .section-title { font-size:1.1rem; font-weight:700; color:var(--text); }
+  .section-sub { font-size:0.8rem; color:var(--text-light); margin-top:2px; }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:10px 20px; border-radius:8px; font-weight:600;
+    font-size:0.875rem; cursor:pointer; transition:all 0.2s;
+    border:none; font-family:'Plus Jakarta Sans',sans-serif;
+    white-space:nowrap;
+  }
+  .btn-primary { background:var(--primary); color:#fff; }
+  .btn-primary:hover { background:var(--primary-dark); box-shadow:0 4px 12px rgba(252,25,25,0.3); }
+  .btn-secondary { background:transparent; color:var(--primary); border:2px solid var(--primary); }
+  .btn-secondary:hover { background:var(--primary-10); }
+  .btn-success { background:var(--success); color:#fff; }
+  .btn-danger { background:var(--danger); color:#fff; }
+  .btn-warning { background:var(--warning); color:#212529; }
+  .btn-outline { background:transparent; border:1px solid var(--border); color:var(--text-sec); }
+  .btn-outline:hover { background:var(--bg); }
+  .btn-sm { padding:6px 12px; font-size:0.8rem; border-radius:6px; }
+  .btn-icon { width:36px; height:36px; padding:0; border-radius:8px; justify-content:center; }
+
+  /* ===== BADGES ===== */
+  .badge-pill {
+    display:inline-flex; align-items:center;
+    padding:3px 10px; border-radius:999px;
+    font-size:0.72rem; font-weight:600;
+  }
+  .badge-active { background:rgba(40,167,69,0.12); color:var(--success); }
+  .badge-inactive { background:rgba(220,53,69,0.12); color:var(--danger); }
+  .badge-pending { background:rgba(255,193,7,0.15); color:#b08000; }
+  .badge-info-b { background:rgba(23,162,184,0.12); color:var(--info); }
+  .badge-gray { background:rgba(108,117,125,0.12); color:var(--text-light); }
+  .dark .badge-pending { color:var(--warning); }
+
+  /* ===== TABLE ===== */
+  .table-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; }
+  thead th {
+    background:var(--bg); padding:12px 16px;
+    text-align:left; font-size:0.78rem; font-weight:600;
+    color:var(--text); text-transform:uppercase; letter-spacing:0.5px;
+    border-bottom:2px solid var(--border);
+    white-space:nowrap;
+  }
+  tbody tr { border-bottom:1px solid var(--border); transition:background 0.15s; }
+  tbody tr:hover { background:var(--primary-05); }
+  tbody td { padding:12px 16px; font-size:0.875rem; color:var(--text-sec); }
+  .td-img { display:flex; align-items:center; gap:10px; }
+  .td-img img, .td-thumb {
+    width:40px; height:40px; border-radius:8px;
+    object-fit:cover; background:var(--bg);
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* ===== FORM ===== */
+  .form-group { margin-bottom:18px; }
+  .form-label { font-size:0.85rem; font-weight:600; color:var(--text); margin-bottom:6px; display:block; }
+  .form-control {
+    width:100%; padding:11px 14px; border-radius:8px;
+    border:1px solid var(--border); background:var(--surface);
+    color:var(--text); font-size:0.9rem;
+    font-family:'Plus Jakarta Sans',sans-serif;
+    transition:all 0.2s; outline:none;
+  }
+  .form-control:focus { border-color:var(--primary); box-shadow:0 0 0 3px var(--primary-10); }
+  textarea.form-control { resize:vertical; min-height:100px; }
+  select.form-control { cursor:pointer; }
+
+  /* ===== TOGGLE ===== */
+  .toggle { position:relative; width:42px; height:22px; cursor:pointer; }
+  .toggle input { opacity:0; width:0; height:0; }
+  .toggle-slider {
+    position:absolute; inset:0; border-radius:999px;
+    background:var(--border); transition:0.3s;
+  }
+  .toggle-slider::before {
+    content:''; position:absolute; width:16px; height:16px;
+    border-radius:50%; background:#fff; left:3px; top:3px;
+    transition:0.3s; box-shadow:0 1px 3px rgba(0,0,0,0.2);
+  }
+  input:checked + .toggle-slider { background:var(--primary); }
+  input:checked + .toggle-slider::before { transform:translateX(20px); }
+
+  /* ===== ACTIVITY TIMELINE ===== */
+  .timeline { display:flex; flex-direction:column; gap:0; }
+  .timeline-item {
+    display:flex; gap:14px; padding-bottom:16px;
+    position:relative;
+  }
+  .timeline-item::before {
+    content:''; position:absolute; left:16px; top:32px;
+    width:1px; height:calc(100% - 16px);
+    background:var(--border);
+  }
+  .timeline-item:last-child::before { display:none; }
+  .timeline-dot {
+    width:32px; height:32px; min-width:32px;
+    border-radius:50%; background:var(--primary-10);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--primary); z-index:1;
+  }
+  .timeline-dot.success { background:rgba(40,167,69,0.1); color:var(--success); }
+  .timeline-dot.warning { background:rgba(255,193,7,0.1); color:var(--warning); }
+  .timeline-dot.info { background:rgba(23,162,184,0.1); color:var(--info); }
+  .timeline-content strong { font-size:0.875rem; font-weight:600; color:var(--text); display:block; }
+  .timeline-content span { font-size:0.78rem; color:var(--text-light); }
+
+  /* ===== PAGINATION ===== */
+  .pagination { display:flex; gap:6px; align-items:center; }
+  .page-btn {
+    min-width:34px; height:34px; border-radius:8px;
+    border:1px solid var(--border); background:var(--surface);
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.85rem; cursor:pointer; transition:all 0.2s;
+    color:var(--text-sec); padding:0 10px; font-weight:500;
+  }
+  .page-btn:hover { border-color:var(--primary); color:var(--primary); }
+  .page-btn.active { background:var(--primary); border-color:var(--primary); color:#fff; }
+  .page-btn:disabled { opacity:0.5; cursor:not-allowed; }
+
+  /* ===== FILTER BAR ===== */
+  .filter-bar {
+    display:flex; gap:12px; align-items:center;
+    flex-wrap:wrap; margin-bottom:20px;
+  }
+  .filter-input {
+    display:flex; align-items:center; gap:8px;
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:8px; padding:8px 12px;
+    flex:1; min-width:180px; max-width:280px;
+  }
+  .filter-input input {
+    background:transparent; border:none; outline:none;
+    font-size:0.875rem; color:var(--text); width:100%;
+    font-family:'Plus Jakarta Sans',sans-serif;
+  }
+  .filter-input input::placeholder { color:var(--text-light); }
+  select.filter-select {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:8px; padding:8px 14px;
+    font-size:0.875rem; color:var(--text-sec);
+    cursor:pointer; outline:none;
+    font-family:'Plus Jakarta Sans',sans-serif;
+  }
+
+  /* ===== CHART WRAPPER ===== */
+  .chart-wrap { position:relative; height:220px; }
+  .chart-wrap-tall { position:relative; height:280px; }
+
+  /* ===== PRODUCT RANK ===== */
+  .product-rank { display:flex; flex-direction:column; gap:10px; }
+  .rank-item {
+    display:flex; align-items:center; gap:12px;
+    padding:10px 12px; border-radius:10px;
+    background:var(--bg); transition:background 0.2s;
+  }
+  .rank-item:hover { background:var(--primary-10); }
+  .rank-num {
+    width:24px; height:24px; border-radius:50%;
+    background:var(--primary); color:#fff;
+    font-size:0.75rem; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+    min-width:24px;
+  }
+  .rank-num.silver { background:var(--text-light); }
+  .rank-num.bronze { background:#CD7F32; }
+
+  /* ===== STOCK ALERT ===== */
+  .stock-alert { display:flex; flex-direction:column; gap:8px; }
+  .alert-item {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 14px; border-radius:10px;
+    background:rgba(255,193,7,0.08); border:1px solid rgba(255,193,7,0.2);
+  }
+  .alert-item .name { font-size:0.875rem; font-weight:600; color:var(--text); }
+  .alert-item .stock-bar { flex:1; margin:0 14px; height:6px; background:var(--border); border-radius:3px; overflow:hidden; }
+  .alert-item .stock-fill { height:100%; border-radius:3px; background:var(--warning); }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,0.5);
+    display:flex; align-items:center; justify-content:center;
+    z-index:200; padding:20px;
+  }
+  .modal {
+    background:var(--surface); border-radius:20px;
+    padding:24px; max-width:600px; width:100%;
+    max-height:90vh; overflow-y:auto;
+    box-shadow:0 20px 60px rgba(0,0,0,0.2);
+  }
+  .modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+  .modal-title { font-size:1.15rem; font-weight:700; color:var(--text); }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width:5px; height:5px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:10px; }
+  ::-webkit-scrollbar-thumb:hover { background:var(--text-light); }
+
+  /* ===== PAGE SECTIONS ===== */
+  .page-section { display:none; }
+  .page-section.active { display:block; }
+
+  /* ===== MOBILE OVERLAY ===== */
+  .mobile-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,0.5);
+    z-index:99; display:none;
+  }
+  .mobile-overlay.show { display:block; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width:1280px) {
+    .grid-6 { grid-template-columns:repeat(3,1fr); }
+    .grid-4 { grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width:1024px) {
+    .sidebar { transform:translateX(-100%); }
+    .sidebar.mobile-open { transform:translateX(0); }
+    .header { left:0 !important; }
+    .main { margin-left:0 !important; }
+    .search-bar { width:180px; }
+    .grid-3-2 { grid-template-columns:1fr; }
+    .grid-2-1 { grid-template-columns:1fr; }
+  }
+  @media (max-width:768px) {
+    .content { padding:16px; }
+    .grid-6 { grid-template-columns:repeat(2,1fr); }
+    .grid-4 { grid-template-columns:repeat(2,1fr); }
+    .grid-3 { grid-template-columns:1fr; }
+    .grid-2 { grid-template-columns:1fr; }
+    .search-bar { display:none; }
+    .datetime { display:none; }
+    .col-span-2,.col-span-3,.col-span-4,.col-span-6 { grid-column:span 1; }
+  }
+  @media (max-width:480px) {
+    .grid-6 { grid-template-columns:1fr; }
+    .grid-4 { grid-template-columns:1fr; }
+  }
+
+  /* ===== EXTRAS ===== */
+  .upload-area {
+    border:2px dashed var(--border); border-radius:12px;
+    padding:32px; text-align:center; cursor:pointer;
+    transition:all 0.2s; color:var(--text-light);
+  }
+  .upload-area:hover { border-color:var(--primary); background:var(--primary-05); color:var(--primary); }
+
+  .gallery-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  .gallery-item {
+    position:relative; border-radius:12px; overflow:hidden;
+    aspect-ratio:1; background:var(--bg); cursor:pointer;
+  }
+  .gallery-item img { width:100%; height:100%; object-fit:cover; }
+  .gallery-item-overlay {
+    position:absolute; inset:0;
+    background:rgba(252,25,25,0.7);
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    opacity:0; transition:opacity 0.2s;
+  }
+  .gallery-item:hover .gallery-item-overlay { opacity:1; }
+
+  .tabs { display:flex; gap:0; border-bottom:2px solid var(--border); margin-bottom:24px; }
+  .tab {
+    padding:10px 20px; font-size:0.9rem; font-weight:600;
+    color:var(--text-light); cursor:pointer; transition:all 0.2s;
+    border-bottom:2px solid transparent; margin-bottom:-2px;
+  }
+  .tab:hover { color:var(--primary); }
+  .tab.active { color:var(--primary); border-bottom-color:var(--primary); }
+
+  .empty-state { text-align:center; padding:40px 20px; color:var(--text-light); }
+  .empty-state iconify-icon { font-size:48px; opacity:0.3; display:block; margin:0 auto 12px; }
+
+  .tooltip-wrap { position:relative; display:inline-block; }
+  .tooltip-box {
+    position:absolute; bottom:100%; left:50%; transform:translateX(-50%);
+    background:#212529; color:#fff; font-size:0.75rem; border-radius:4px;
+    padding:4px 8px; white-space:nowrap; pointer-events:none;
+    opacity:0; transition:opacity 0.2s; margin-bottom:4px; z-index:10;
+  }
+  .tooltip-wrap:hover .tooltip-box { opacity:1; }
 </style>
 </head>
-<body class="font-sans bg-white min-h-screen overflow-x-hidden">
+<body x-data="dashboardApp()" :class="{ 'dark': darkMode }">
 
-<!-- Mobile Overlay -->
-<div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 lg:hidden hidden" onclick="toggleSidebar()"></div>
+<!-- MOBILE OVERLAY -->
+<div class="mobile-overlay" :class="{ show: mobileSidebarOpen }" @click="mobileSidebarOpen=false"></div>
 
-<div class="flex min-h-screen">
-  <!-- SIDEBAR - BANDUNG THEME -->
-  <aside id="sidebar" class="w-64 bg-muted fixed inset-y-0 left-0 flex flex-col z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
-    <!-- Logo Section -->
-    <div class="px-6 py-4">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-4">
-          <div class="w-14 h-14 bg-primary rounded-full flex items-center justify-center">
-            <i data-lucide="bar-chart-3" class="w-7 h-7 text-white"></i>
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar" :class="{ collapsed: sidebarCollapsed, 'mobile-open': mobileSidebarOpen }">
+  <!-- Logo -->
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <iconify-icon icon="solar:t-shirt-bold" style="font-size:22px;color:#fff;"></iconify-icon>
+    </div>
+    <div class="logo-text">
+      <h2>EVDesign</h2>
+      <span>Admin Dashboard</span>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="sidebar-nav">
+    <div class="nav-section-title">MENU UTAMA</div>
+
+    <a class="nav-item" :class="{ active: currentPage==='dashboard' }" @click="navigate('dashboard')">
+      <iconify-icon icon="solar:home-2-bold-duotone"></iconify-icon>
+      <span class="nav-text">Dashboard Utama</span>
+    </a>
+    <a class="nav-item" :class="{ active: currentPage==='products' }" @click="navigate('products')">
+      <iconify-icon icon="solar:bag-bold-duotone"></iconify-icon>
+      <span class="nav-text">Manajemen Produk</span>
+    </a>
+    <a class="nav-item" :class="{ active: currentPage==='categories' }" @click="navigate('categories')">
+      <iconify-icon icon="solar:sort-bold-duotone"></iconify-icon>
+      <span class="nav-text">Manajemen Kategori</span>
+    </a>
+    <a class="nav-item" :class="{ active: currentPage==='artisans' }" @click="navigate('artisans')">
+      <iconify-icon icon="solar:users-group-rounded-bold-duotone"></iconify-icon>
+      <span class="nav-text">Binaan / Perajin</span>
+    </a>
+    <a class="nav-item" :class="{ active: currentPage==='orders' }" @click="navigate('orders')">
+      <iconify-icon icon="solar:cart-large-2-bold-duotone"></iconify-icon>
+      <span class="nav-text">Pesanan / Orders</span>
+    </a>
+
+    <div class="nav-section-title" style="margin-top:12px;">KONTEN</div>
+
+    <a class="nav-item" :class="{ active: currentPage==='inventory' }" @click="navigate('inventory')">
+      <iconify-icon icon="solar:box-bold-duotone"></iconify-icon>
+      <span class="nav-text">Inventaris Bahan</span>
+    </a>
+    <a class="nav-item" :class="{ active: currentPage==='gallery' }" @click="navigate('gallery')">
+      <iconify-icon icon="solar:gallery-bold-duotone"></iconify-icon>
+      <span class="nav-text">Galeri</span>
+    </a>
+    <a class="nav-item" :class="{ active: currentPage==='articles' }" @click="navigate('articles')">
+      <iconify-icon icon="solar:notes-bold-duotone"></iconify-icon>
+      <span class="nav-text">Artikel / Berita</span>
+    </a>
+
+    <div class="nav-section-title" style="margin-top:12px;">SISTEM</div>
+
+    <a class="nav-item" :class="{ active: currentPage==='settings' }" @click="navigate('settings')">
+      <iconify-icon icon="solar:settings-bold-duotone"></iconify-icon>
+      <span class="nav-text">Pengaturan</span>
+    </a>
+    <a class="nav-item" style="color:var(--danger);" @click="navigate('login')">
+      <iconify-icon icon="solar:logout-2-bold-duotone" style="color:var(--danger)"></iconify-icon>
+      <span class="nav-text">Logout</span>
+    </a>
+  </nav>
+
+  <!-- Profile -->
+  <div class="sidebar-profile">
+    <div class="avatar">EV</div>
+    <div class="profile-info">
+      <strong>Admin EVDesign</strong>
+      <span>Super Admin</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ===== HEADER ===== -->
+<header class="header" :class="{ 'sidebar-collapsed': sidebarCollapsed, 'sidebar-hidden': isMobile }">
+  <button class="header-btn" @click="toggleSidebar()" style="border:none;">
+    <iconify-icon icon="solar:hamburger-menu-bold" style="font-size:20px;"></iconify-icon>
+  </button>
+
+  <div class="header-title">
+    <h1 x-text="pageTitle"></h1>
+    <div class="breadcrumb">EVDesign / <span x-text="pageTitle"></span></div>
+  </div>
+
+  <div class="search-bar">
+    <iconify-icon icon="solar:magnifer-bold" style="color:var(--text-light);font-size:16px;"></iconify-icon>
+    <input type="text" placeholder="Cari produk, pesanan, perajin...">
+  </div>
+
+  <button class="header-btn" style="border:none;">
+    <iconify-icon icon="solar:bell-bold-duotone" style="font-size:20px;"></iconify-icon>
+    <div class="badge">4</div>
+  </button>
+
+  <button class="header-btn" @click="darkMode=!darkMode" style="border:none;">
+    <iconify-icon :icon="darkMode ? 'solar:sun-bold' : 'solar:moon-bold'" style="font-size:20px;"></iconify-icon>
+  </button>
+
+  <div class="avatar" style="cursor:pointer;">EV</div>
+  <div class="datetime">
+    <div x-text="currentDate" style="font-weight:500;color:var(--text);font-size:0.8rem;"></div>
+    <div x-text="currentTime" style="font-family:'JetBrains Mono';font-size:0.78rem;color:var(--primary);font-weight:700;"></div>
+  </div>
+</header>
+
+<!-- ===== MAIN ===== -->
+<main class="main" :class="{ 'sidebar-collapsed': sidebarCollapsed, 'sidebar-hidden': isMobile }">
+  <div class="content">
+
+    <!-- ============================
+         PAGE: DASHBOARD
+    ============================= -->
+    <div class="page-section" :class="{ active: currentPage==='dashboard' }">
+
+      <!-- Stat Cards -->
+      <div class="grid-6" style="margin-bottom:24px;">
+        <div class="stat-card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <div class="stat-label">Total Produk</div>
+              <div class="stat-value">124</div>
+            </div>
+            <div class="stat-icon">
+              <iconify-icon icon="solar:bag-bold-duotone" style="font-size:28px;"></iconify-icon>
+            </div>
           </div>
-          <div>
-            <h1 class="text-foreground text-lg font-bold">Analytics Hub</h1>
-            <p class="text-foreground text-xs font-normal">Data Insights</p>
+          <div class="trend up">
+            <iconify-icon icon="solar:arrow-up-bold"></iconify-icon>
+            +12 dari bulan lalu
           </div>
         </div>
-        <button onclick="toggleSidebar()" aria-label="Close sidebar" class="lg:hidden p-2 rounded-lg hover:bg-gray-200 cursor-pointer transition-all duration-200">
-          <i data-lucide="x" class="w-5 h-5 text-gray-600"></i>
-        </button>
-      </div>
-    </div>
 
-    <!-- Navigation Menu - BANDUNG STYLE -->
-    <nav class="flex-1 px-6 py-4 space-y-6 overflow-y-auto">
-      <!-- Section with header -->
-      <div>
-        <h3 class="text-foreground text-xs font-semibold uppercase tracking-wider mb-3">Analytics</h3>
-        <div class="space-y-1">
-          <!-- ACTIVE: bg-[#276874] text-white -->
-          <a href="#" class="cursor-pointer">
-            <div class="flex items-center gap-2.5 px-4 py-3 rounded-card bg-[#276874] text-white">
-              <i data-lucide="trending-up" class="w-5 h-5"></i>
-              <span>Overview</span>
+        <div class="stat-card success">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <div class="stat-label">Total Perajin</div>
+              <div class="stat-value">40</div>
             </div>
-          </a>
-          <!-- INACTIVE: hover:bg-gray-100 -->
-          <a href="#" class="group cursor-pointer">
-            <div class="flex items-center gap-2.5 px-4 py-3 rounded-card hover:bg-gray-100">
-              <i data-lucide="users" class="w-5 h-5 text-gray-600 group-hover:text-primary"></i>
-              <span class="text-foreground group-hover:text-primary">User Analytics</span>
+            <div class="stat-icon">
+              <iconify-icon icon="solar:users-group-rounded-bold-duotone" style="font-size:28px;"></iconify-icon>
             </div>
-          </a>
-          <a href="#" class="group cursor-pointer">
-            <div class="flex items-center gap-2.5 px-4 py-3 rounded-card hover:bg-gray-100">
-              <i data-lucide="dollar-sign" class="w-5 h-5 text-gray-600 group-hover:text-primary"></i>
-              <span class="text-foreground group-hover:text-primary">Revenue</span>
-            </div>
-          </a>
-          <a href="#" class="group cursor-pointer">
-            <div class="flex items-center gap-2.5 px-4 py-3 rounded-card hover:bg-gray-100">
-              <i data-lucide="globe" class="w-5 h-5 text-gray-600 group-hover:text-primary"></i>
-              <span class="text-foreground group-hover:text-primary">Traffic</span>
-            </div>
-          </a>
-        </div>
-      </div>
-
-      <!-- Reports Section -->
-      <div>
-        <h3 class="text-foreground text-xs font-semibold uppercase tracking-wider mb-3">Reports</h3>
-        <div class="space-y-1">
-          <a href="#" class="group cursor-pointer">
-            <div class="flex items-center gap-2.5 px-4 py-3 rounded-card hover:bg-gray-100">
-              <i data-lucide="file-text" class="w-5 h-5 text-gray-600 group-hover:text-primary"></i>
-              <span class="text-foreground group-hover:text-primary">Custom Reports</span>
-            </div>
-          </a>
-          <a href="#" class="group cursor-pointer">
-            <div class="flex items-center gap-2.5 px-4 py-3 rounded-card hover:bg-gray-100">
-              <i data-lucide="calendar" class="w-5 h-5 text-gray-600 group-hover:text-primary"></i>
-              <span class="text-foreground group-hover:text-primary">Scheduled Reports</span>
-            </div>
-          </a>
-        </div>
-      </div>
-    </nav>
-
-    <!-- User Profile at Bottom - NO bg-white wrapper! -->
-    <div class="px-6 pb-6 mt-auto">
-      <div class="flex items-center gap-3">
-        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" alt="Data Analyst profile photo" class="w-12 h-12 rounded-full object-cover flex-shrink-0">
-        <div class="min-w-0 flex-1">
-          <p class="text-foreground text-base font-semibold truncate">Data Analyst</p>
-          <p class="text-foreground text-sm font-normal truncate">analyst@company.com</p>
-        </div>
-      </div>
-    </div>
-  </aside>
-
-  <!-- MAIN CONTENT -->
-  <main class="flex-1 lg:ml-64 p-4 md:p-5 bg-white min-h-screen overflow-x-hidden">
-    <!-- Mobile Header -->
-    <div class="lg:hidden flex items-center justify-between mb-6 bg-muted rounded-card p-4">
-      <button onclick="toggleSidebar()" aria-label="Open menu" class="p-2 rounded-lg hover:bg-gray-200 cursor-pointer transition-all duration-200">
-        <i data-lucide="menu" class="w-6 h-6 text-foreground"></i>
-      </button>
-      <h1 class="text-foreground text-lg font-bold">Analytics Hub</h1>
-      <div class="w-10"></div>
-    </div>
-
-    <!-- Page Header -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 md:mb-8">
-      <div>
-        <h1 class="text-foreground text-2xl md:text-3xl font-bold mb-1">Analytics Dashboard</h1>
-        <p class="text-gray-500 text-sm md:text-base">Comprehensive data insights and performance metrics</p>
-      </div>
-      <div class="grid grid-cols-2 gap-2 w-full md:w-auto md:flex md:items-center md:gap-3">
-        <button onclick="exportData()" class="flex items-center justify-center gap-2 px-4 py-2.5 border border-border rounded-button text-foreground font-medium hover:border-primary transition-all duration-200 cursor-pointer">
-          <i data-lucide="download" class="w-4 h-4"></i>
-          <span>Export</span>
-        </button>
-        <button onclick="generateReport()" class="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white rounded-button font-medium hover:bg-primary-hover transition-all duration-200 cursor-pointer">
-          <i data-lucide="file-text" class="w-4 h-4"></i>
-          <span>Generate Report</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Date Range Picker -->
-    <div class="bg-muted rounded-card pt-5 px-3 pb-3 mb-6 md:mb-8">
-      <h3 class="text-foreground text-lg font-bold ml-3 mb-4">Date Range & Filters</h3>
-      <div class="bg-white rounded-card p-4 md:p-5">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div class="space-y-2">
-            <label class="block text-foreground text-sm font-medium">Start Date</label>
-            <input type="date" id="startDate" value="2024-01-01" class="w-full px-4 py-3 border border-border rounded-button text-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all duration-200">
           </div>
-          <div class="space-y-2">
-            <label class="block text-foreground text-sm font-medium">End Date</label>
-            <input type="date" id="endDate" value="2024-12-31" class="w-full px-4 py-3 border border-border rounded-button text-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all duration-200">
+          <div class="trend up">
+            <iconify-icon icon="solar:arrow-up-bold"></iconify-icon>
+            Semua aktif
           </div>
-          <div class="space-y-2">
-            <label class="block text-foreground text-sm font-medium">Quick Range</label>
-            <select id="quickRange" onchange="applyQuickRange()" class="w-full px-4 py-3 border border-border rounded-button text-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all duration-200">
-              <option value="custom">Custom Range</option>
-              <option value="7d">Last 7 Days</option>
-              <option value="30d">Last 30 Days</option>
-              <option value="90d">Last 90 Days</option>
-              <option value="1y">Last Year</option>
+        </div>
+
+        <div class="stat-card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <div class="stat-label">Pesanan Bulan Ini</div>
+              <div class="stat-value">56</div>
+            </div>
+            <div class="stat-icon">
+              <iconify-icon icon="solar:cart-large-2-bold-duotone" style="font-size:28px;"></iconify-icon>
+            </div>
+          </div>
+          <div class="trend up">
+            <iconify-icon icon="solar:arrow-up-bold"></iconify-icon>
+            +23% dari bulan lalu
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <div class="stat-label">Pendapatan Bulan Ini</div>
+              <div class="stat-value" style="font-size:1.4rem;">45,8Jt</div>
+            </div>
+            <div class="stat-icon">
+              <iconify-icon icon="solar:dollar-bold-duotone" style="font-size:28px;"></iconify-icon>
+            </div>
+          </div>
+          <div class="trend up">
+            <iconify-icon icon="solar:arrow-up-bold"></iconify-icon>
+            +18% dari bulan lalu
+          </div>
+        </div>
+
+        <div class="stat-card warning">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <div class="stat-label">Stok Menipis</div>
+              <div class="stat-value">8</div>
+            </div>
+            <div class="stat-icon">
+              <iconify-icon icon="solar:box-bold-duotone" style="font-size:28px;"></iconify-icon>
+            </div>
+          </div>
+          <div class="trend warn">
+            <iconify-icon icon="solar:danger-triangle-bold"></iconify-icon>
+            Perlu segera diisi
+          </div>
+        </div>
+
+        <div class="stat-card info">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <div class="stat-label">Pengunjung Bulan Ini</div>
+              <div class="stat-value">1,240</div>
+            </div>
+            <div class="stat-icon">
+              <iconify-icon icon="solar:users-group-two-rounded-bold-duotone" style="font-size:28px;"></iconify-icon>
+            </div>
+          </div>
+          <div class="trend up">
+            <iconify-icon icon="solar:arrow-up-bold"></iconify-icon>
+            +5% dari bulan lalu
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="grid-3-2" style="margin-bottom:24px;">
+        <div class="card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Penjualan 12 Bulan</div>
+              <div class="section-sub">Pendapatan kumulatif per bulan</div>
+            </div>
+            <select class="filter-select" style="font-size:0.78rem;padding:6px 10px;">
+              <option>2024</option>
+              <option>2023</option>
             </select>
           </div>
-          <div class="space-y-2">
-            <label class="block text-foreground text-sm font-medium">Metric</label>
-            <select id="metricFilter" onchange="updateCharts()" class="w-full px-4 py-3 border border-border rounded-button text-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all duration-200">
-              <option value="all">All Metrics</option>
-              <option value="revenue">Revenue</option>
-              <option value="users">Users</option>
-              <option value="sessions">Sessions</option>
+          <div class="chart-wrap">
+            <canvas id="salesChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Produk per Kategori</div>
+              <div class="section-sub">Distribusi penjualan</div>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="categoryChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Row -->
+      <div class="grid-3" style="margin-bottom:24px;">
+        <!-- Activity Timeline -->
+        <div class="card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Aktivitas Terkini</div>
+              <div class="section-sub">Real-time updates</div>
+            </div>
+            <button class="btn btn-outline btn-sm">Semua</button>
+          </div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-dot">
+                <iconify-icon icon="solar:bag-bold" style="font-size:14px;"></iconify-icon>
+              </div>
+              <div class="timeline-content">
+                <strong>Produk Kemeja Karawo ditambahkan</strong>
+                <span>5 menit lalu · Oleh Admin</span>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot success">
+                <iconify-icon icon="solar:cart-check-bold" style="font-size:14px;"></iconify-icon>
+              </div>
+              <div class="timeline-content">
+                <strong>Pesanan #INV-001 dikonfirmasi</strong>
+                <span>15 menit lalu</span>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot warning">
+                <iconify-icon icon="solar:box-bold" style="font-size:14px;"></iconify-icon>
+              </div>
+              <div class="timeline-content">
+                <strong>Stok benang sulaman menipis</strong>
+                <span>1 jam lalu · Perlu tindakan</span>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot info">
+                <iconify-icon icon="solar:user-plus-bold" style="font-size:14px;"></iconify-icon>
+              </div>
+              <div class="timeline-content">
+                <strong>Perajin baru: Ibu Siti bergabung</strong>
+                <span>3 jam lalu · Wilayah Bone Bolango</span>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot">
+                <iconify-icon icon="solar:notes-bold" style="font-size:14px;"></iconify-icon>
+              </div>
+              <div class="timeline-content">
+                <strong>Artikel "Karawo Warisan Gorontalo" dipublish</strong>
+                <span>5 jam lalu</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Products -->
+        <div class="card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Produk Terlaris</div>
+              <div class="section-sub">Bulan ini</div>
+            </div>
+          </div>
+          <div class="product-rank">
+            <div class="rank-item">
+              <div class="rank-num">1</div>
+              <div style="flex:1;">
+                <div style="font-size:0.875rem;font-weight:600;color:var(--text);">Kemeja Karawo Premium</div>
+                <div style="font-size:0.75rem;color:var(--text-light);">24 terjual · Rp 8.400.000</div>
+              </div>
+              <div class="badge-pill badge-active">+12%</div>
+            </div>
+            <div class="rank-item">
+              <div class="rank-num silver">2</div>
+              <div style="flex:1;">
+                <div style="font-size:0.875rem;font-weight:600;color:var(--text);">Selendang Motif Padi</div>
+                <div style="font-size:0.75rem;color:var(--text-light);">18 terjual · Rp 5.400.000</div>
+              </div>
+              <div class="badge-pill badge-active">+8%</div>
+            </div>
+            <div class="rank-item">
+              <div class="rank-num bronze">3</div>
+              <div style="flex:1;">
+                <div style="font-size:0.875rem;font-weight:600;color:var(--text);">Blouse Karawo Elegan</div>
+                <div style="font-size:0.75rem;color:var(--text-light);">15 terjual · Rp 6.750.000</div>
+              </div>
+              <div class="badge-pill badge-active">+5%</div>
+            </div>
+            <div class="rank-item">
+              <div class="rank-num" style="background:var(--text-light);">4</div>
+              <div style="flex:1;">
+                <div style="font-size:0.875rem;font-weight:600;color:var(--text);">Tas Tangan Karawo</div>
+                <div style="font-size:0.75rem;color:var(--text-light);">12 terjual · Rp 3.600.000</div>
+              </div>
+              <div class="badge-pill badge-gray">+2%</div>
+            </div>
+            <div class="rank-item">
+              <div class="rank-num" style="background:var(--text-light);">5</div>
+              <div style="flex:1;">
+                <div style="font-size:0.875rem;font-weight:600;color:var(--text);">Sarung Karawo Tradisional</div>
+                <div style="font-size:0.75rem;color:var(--text-light);">10 terjual · Rp 4.500.000</div>
+              </div>
+              <div class="badge-pill badge-gray">-1%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stock Alert -->
+        <div class="card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Peringatan Stok</div>
+              <div class="section-sub">Bahan menipis atau habis</div>
+            </div>
+          </div>
+          <div class="stock-alert">
+            <div class="alert-item">
+              <div class="name">Benang Sutra Merah</div>
+              <div class="stock-bar"><div class="stock-fill" style="width:15%;background:var(--danger);"></div></div>
+              <div style="font-size:0.75rem;font-weight:700;color:var(--danger);">15 gulungan</div>
+            </div>
+            <div class="alert-item">
+              <div class="name">Kain Putih Halus</div>
+              <div class="stock-bar"><div class="stock-fill" style="width:20%;"></div></div>
+              <div style="font-size:0.75rem;font-weight:700;color:var(--warning);">2 meter</div>
+            </div>
+            <div class="alert-item">
+              <div class="name">Benang Emas No.8</div>
+              <div class="stock-bar"><div class="stock-fill" style="width:30%;"></div></div>
+              <div style="font-size:0.75rem;font-weight:700;color:var(--warning);">30 gulung</div>
+            </div>
+            <div class="alert-item">
+              <div class="name">Kain Sutra Kuning</div>
+              <div class="stock-bar"><div class="stock-fill" style="width:10%;background:var(--danger);"></div></div>
+              <div style="font-size:0.75rem;font-weight:700;color:var(--danger);">1 meter</div>
+            </div>
+            <div class="alert-item">
+              <div class="name">Benang Perak No.12</div>
+              <div class="stock-bar"><div class="stock-fill" style="width:25%;"></div></div>
+              <div style="font-size:0.75rem;font-weight:700;color:var(--warning);">25 gulung</div>
+            </div>
+          </div>
+          <button class="btn btn-warning btn-sm" style="margin-top:14px;width:100%;justify-content:center;">
+            <iconify-icon icon="solar:cart-plus-bold"></iconify-icon>
+            Pesan Ulang Semua
+          </button>
+        </div>
+      </div>
+
+      <!-- Pie + Traffic -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Distribusi Perajin per Wilayah</div>
+              <div class="section-sub">40 perajin aktif</div>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="artisanPieChart"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Traffic Website</div>
+              <div class="section-sub">Pengunjung 6 bulan terakhir</div>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="trafficChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================
+         PAGE: PRODUCTS
+    ============================= -->
+    <div class="page-section" :class="{ active: currentPage==='products' }">
+      <div class="section-header">
+        <div>
+          <div class="section-title" style="font-size:1.25rem;">Daftar Produk</div>
+          <div class="section-sub">124 produk terdaftar</div>
+        </div>
+        <button class="btn btn-primary" @click="showAddProduct=true">
+          <iconify-icon icon="solar:add-circle-bold"></iconify-icon>
+          Tambah Produk
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="filter-bar">
+          <div class="filter-input">
+            <iconify-icon icon="solar:magnifer-bold" style="color:var(--text-light);font-size:16px;"></iconify-icon>
+            <input type="text" placeholder="Cari produk...">
+          </div>
+          <select class="filter-select">
+            <option value="">Semua Kategori</option>
+            <option>Kemeja</option>
+            <option>Blouse</option>
+            <option>Selendang</option>
+            <option>Tas</option>
+            <option>Sarung</option>
+            <option>Aksesori</option>
+          </select>
+          <select class="filter-select">
+            <option value="">Semua Status</option>
+            <option>Aktif</option>
+            <option>Non-aktif</option>
+          </select>
+          <select class="filter-select">
+            <option value="">Urutkan</option>
+            <option>Terbaru</option>
+            <option>Terlama</option>
+            <option>Harga Tertinggi</option>
+            <option>Harga Terendah</option>
+          </select>
+          <button class="btn btn-outline btn-sm">
+            <iconify-icon icon="solar:export-bold"></iconify-icon>
+            Export
+          </button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th><input type="checkbox" style="accent-color:var(--primary);"></th>
+                <th>Produk</th>
+                <th>Kategori</th>
+                <th>Harga</th>
+                <th>Stok</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="p in products" :key="p.id">
+                <tr>
+                  <td><input type="checkbox" style="accent-color:var(--primary);"></td>
+                  <td>
+                    <div class="td-img">
+                      <div class="td-thumb" :style="`background:${p.color};border-radius:8px;`">
+                        <iconify-icon icon="solar:t-shirt-bold" style="color:#fff;font-size:20px;"></iconify-icon>
+                      </div>
+                      <div>
+                        <div style="font-weight:600;font-size:0.875rem;color:var(--text);" x-text="p.name"></div>
+                        <div style="font-size:0.75rem;color:var(--text-light);" x-text="'SKU: '+p.sku"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge-pill badge-gray" x-text="p.category"></span></td>
+                  <td><span class="mono" x-text="'Rp '+p.price.toLocaleString('id')"></span></td>
+                  <td>
+                    <span :style="p.stock < 5 ? 'color:var(--danger);font-weight:700;' : ''" x-text="p.stock+' pcs'"></span>
+                  </td>
+                  <td>
+                    <span :class="p.status==='Aktif' ? 'badge-pill badge-active' : 'badge-pill badge-inactive'" x-text="p.status"></span>
+                  </td>
+                  <td>
+                    <div style="display:flex;gap:6px;">
+                      <div class="tooltip-wrap">
+                        <button class="btn btn-outline btn-icon btn-sm">
+                          <iconify-icon icon="solar:pen-bold" style="font-size:16px;"></iconify-icon>
+                        </button>
+                        <div class="tooltip-box">Edit</div>
+                      </div>
+                      <div class="tooltip-wrap">
+                        <button class="btn btn-outline btn-icon btn-sm">
+                          <iconify-icon icon="solar:copy-bold" style="font-size:16px;"></iconify-icon>
+                        </button>
+                        <div class="tooltip-box">Duplikat</div>
+                      </div>
+                      <div class="tooltip-wrap">
+                        <button class="btn btn-icon btn-sm" style="background:rgba(220,53,69,0.1);border:none;color:var(--danger);">
+                          <iconify-icon icon="solar:trash-bin-trash-bold" style="font-size:16px;"></iconify-icon>
+                        </button>
+                        <div class="tooltip-box">Hapus</div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;flex-wrap:wrap;gap:10px;">
+          <span style="font-size:0.8rem;color:var(--text-light);">Menampilkan 1-10 dari 124 produk</span>
+          <div class="pagination">
+            <button class="page-btn" disabled>
+              <iconify-icon icon="solar:arrow-left-bold" style="font-size:14px;"></iconify-icon>
+            </button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <span style="color:var(--text-light);padding:0 4px;">...</span>
+            <button class="page-btn">13</button>
+            <button class="page-btn">
+              <iconify-icon icon="solar:arrow-right-bold" style="font-size:14px;"></iconify-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADD PRODUCT MODAL -->
+      <div class="modal-overlay" x-show="showAddProduct" x-cloak @click.self="showAddProduct=false">
+        <div class="modal">
+          <div class="modal-header">
+            <div class="modal-title">Tambah Produk Baru</div>
+            <button class="btn btn-outline btn-icon btn-sm" @click="showAddProduct=false">
+              <iconify-icon icon="solar:close-circle-bold"></iconify-icon>
+            </button>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Nama Produk <span style="color:var(--primary);">*</span></label>
+              <input class="form-control" type="text" placeholder="e.g. Kemeja Karawo Premium">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kategori</label>
+              <select class="form-control">
+                <option>Pilih Kategori</option>
+                <option>Kemeja</option>
+                <option>Blouse</option>
+                <option>Selendang</option>
+                <option>Tas</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Harga <span style="color:var(--primary);">*</span></label>
+              <input class="form-control" type="number" placeholder="350000">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Stok <span style="color:var(--primary);">*</span></label>
+              <input class="form-control" type="number" placeholder="50">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Deskripsi</label>
+            <textarea class="form-control" placeholder="Deskripsi produk..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Foto Produk</label>
+            <div class="upload-area">
+              <iconify-icon icon="solar:cloud-upload-bold" style="font-size:32px;display:block;margin:0 auto 8px;"></iconify-icon>
+              <p style="font-size:0.875rem;">Drag & drop atau <span style="color:var(--primary);font-weight:600;">pilih file</span></p>
+              <p style="font-size:0.75rem;margin-top:4px;">PNG, JPG hingga 5MB</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status Produk</label>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+              <span style="font-size:0.875rem;color:var(--text-sec);">Aktif (tampil di website)</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px;">
+            <button class="btn btn-outline" @click="showAddProduct=false">Batal</button>
+            <button class="btn btn-secondary">Preview</button>
+            <button class="btn btn-primary">
+              <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
+              Simpan Produk
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================
+         PAGE: ARTISANS
+    ============================= -->
+    <div class="page-section" :class="{ active: currentPage==='artisans' }">
+      <div class="section-header">
+        <div>
+          <div class="section-title" style="font-size:1.25rem;">Manajemen Perajin</div>
+          <div class="section-sub">40 perajin binaan terdaftar</div>
+        </div>
+        <button class="btn btn-primary">
+          <iconify-icon icon="solar:user-plus-bold"></iconify-icon>
+          Tambah Perajin
+        </button>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="grid-4" style="margin-bottom:24px;">
+        <div class="stat-card success" style="border-left-color:var(--success);">
+          <div class="stat-label">Aktif</div>
+          <div class="stat-value" style="color:var(--success);">34</div>
+        </div>
+        <div class="stat-card warning">
+          <div class="stat-label">Cuti</div>
+          <div class="stat-value">4</div>
+        </div>
+        <div class="stat-card" style="border-left-color:var(--danger);">
+          <div class="stat-label">Non-aktif</div>
+          <div class="stat-value" style="color:var(--danger);">2</div>
+        </div>
+        <div class="stat-card info">
+          <div class="stat-label">Total Binaan</div>
+          <div class="stat-value" style="color:var(--info);">40</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="filter-bar">
+          <div class="filter-input">
+            <iconify-icon icon="solar:magnifer-bold" style="color:var(--text-light);font-size:16px;"></iconify-icon>
+            <input type="text" placeholder="Cari nama, kontak...">
+          </div>
+          <select class="filter-select">
+            <option>Semua Status</option>
+            <option>Aktif</option>
+            <option>Cuti</option>
+            <option>Non-aktif</option>
+          </select>
+          <select class="filter-select">
+            <option>Semua Wilayah</option>
+            <option>Kota Gorontalo</option>
+            <option>Bone Bolango</option>
+            <option>Gorontalo Utara</option>
+          </select>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Perajin</th>
+                <th>Alamat</th>
+                <th>Kontak</th>
+                <th>Bergabung</th>
+                <th>Produk</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="a in artisans" :key="a.id">
+                <tr>
+                  <td>
+                    <div class="td-img">
+                      <div class="avatar" :style="`background:${a.color};`" x-text="a.initials"></div>
+                      <div>
+                        <div style="font-weight:600;font-size:0.875rem;color:var(--text);" x-text="a.name"></div>
+                        <div style="font-size:0.75rem;color:var(--text-light);" x-text="a.group"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td x-text="a.address"></td>
+                  <td><a :href="'tel:'+a.phone" style="color:var(--primary);font-size:0.875rem;" x-text="a.phone"></a></td>
+                  <td x-text="a.joined"></td>
+                  <td><span class="mono" x-text="a.products+' produk'"></span></td>
+                  <td>
+                    <span :class="{
+                      'badge-pill badge-active': a.status==='Aktif',
+                      'badge-pill badge-pending': a.status==='Cuti',
+                      'badge-pill badge-inactive': a.status==='Non-aktif'
+                    }" x-text="a.status"></span>
+                  </td>
+                  <td>
+                    <div style="display:flex;gap:6px;">
+                      <button class="btn btn-outline btn-icon btn-sm">
+                        <iconify-icon icon="solar:eye-bold" style="font-size:16px;"></iconify-icon>
+                      </button>
+                      <button class="btn btn-outline btn-icon btn-sm">
+                        <iconify-icon icon="solar:pen-bold" style="font-size:16px;"></iconify-icon>
+                      </button>
+                      <button class="btn btn-outline btn-icon btn-sm" style="color:var(--info);">
+                        <iconify-icon icon="solar:chat-round-bold" style="font-size:16px;"></iconify-icon>
+                      </button>
+                      <button class="btn btn-icon btn-sm" style="background:rgba(220,53,69,0.1);border:none;color:var(--danger);">
+                        <iconify-icon icon="solar:trash-bin-trash-bold" style="font-size:16px;"></iconify-icon>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;flex-wrap:wrap;gap:10px;">
+          <span style="font-size:0.8rem;color:var(--text-light);">Menampilkan 1-10 dari 40 perajin</span>
+          <div class="pagination">
+            <button class="page-btn" disabled><iconify-icon icon="solar:arrow-left-bold" style="font-size:14px;"></iconify-icon></button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">4</button>
+            <button class="page-btn"><iconify-icon icon="solar:arrow-right-bold" style="font-size:14px;"></iconify-icon></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================
+         PAGE: ORDERS
+    ============================= -->
+    <div class="page-section" :class="{ active: currentPage==='orders' }">
+      <div class="section-header">
+        <div>
+          <div class="section-title" style="font-size:1.25rem;">Manajemen Pesanan</div>
+          <div class="section-sub">56 pesanan bulan ini</div>
+        </div>
+        <button class="btn btn-outline btn-sm">
+          <iconify-icon icon="solar:export-bold"></iconify-icon>
+          Export Laporan
+        </button>
+      </div>
+
+      <!-- Status Tabs -->
+      <div class="tabs">
+        <div class="tab active">Semua (56)</div>
+        <div class="tab">Baru (8)</div>
+        <div class="tab">Diproses (12)</div>
+        <div class="tab">Dikirim (15)</div>
+        <div class="tab">Selesai (18)</div>
+        <div class="tab">Dibatalkan (3)</div>
+      </div>
+
+      <div class="card">
+        <div class="filter-bar">
+          <div class="filter-input">
+            <iconify-icon icon="solar:magnifer-bold" style="color:var(--text-light);font-size:16px;"></iconify-icon>
+            <input type="text" placeholder="Cari invoice, nama pelanggan...">
+          </div>
+          <input class="filter-select" type="date" style="padding:8px 12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.875rem;cursor:pointer;color:var(--text-sec);outline:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;">
+          <input class="filter-select" type="date" style="padding:8px 12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.875rem;cursor:pointer;color:var(--text-sec);outline:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;">
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>No. Invoice</th>
+                <th>Tanggal</th>
+                <th>Pelanggan</th>
+                <th>Total</th>
+                <th>Pembayaran</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="o in orders" :key="o.id">
+                <tr>
+                  <td><span style="color:var(--primary);font-weight:700;font-family:'JetBrains Mono';" x-text="o.invoice"></span></td>
+                  <td x-text="o.date"></td>
+                  <td>
+                    <div>
+                      <div style="font-weight:600;font-size:0.875rem;color:var(--text);" x-text="o.customer"></div>
+                      <div style="font-size:0.75rem;color:var(--text-light);" x-text="o.city"></div>
+                    </div>
+                  </td>
+                  <td><span class="mono" style="font-weight:700;" x-text="'Rp '+o.total.toLocaleString('id')"></span></td>
+                  <td x-text="o.payment"></td>
+                  <td>
+                    <span :class="{
+                      'badge-pill badge-info-b': o.status==='Baru',
+                      'badge-pill badge-pending': o.status==='Diproses',
+                      'badge-pill badge-gray': o.status==='Dikirim',
+                      'badge-pill badge-active': o.status==='Selesai',
+                      'badge-pill badge-inactive': o.status==='Dibatalkan'
+                    }" x-text="o.status"></span>
+                  </td>
+                  <td>
+                    <div style="display:flex;gap:6px;">
+                      <button class="btn btn-outline btn-icon btn-sm">
+                        <iconify-icon icon="solar:eye-bold" style="font-size:16px;"></iconify-icon>
+                      </button>
+                      <button class="btn btn-outline btn-icon btn-sm" style="color:var(--success);">
+                        <iconify-icon icon="solar:refresh-bold" style="font-size:16px;"></iconify-icon>
+                      </button>
+                      <button class="btn btn-outline btn-icon btn-sm">
+                        <iconify-icon icon="solar:printer-bold" style="font-size:16px;"></iconify-icon>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;flex-wrap:wrap;gap:10px;">
+          <span style="font-size:0.8rem;color:var(--text-light);">Menampilkan 1-10 dari 56 pesanan</span>
+          <div class="pagination">
+            <button class="page-btn" disabled><iconify-icon icon="solar:arrow-left-bold" style="font-size:14px;"></iconify-icon></button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">4</button>
+            <button class="page-btn">5</button>
+            <button class="page-btn">6</button>
+            <button class="page-btn"><iconify-icon icon="solar:arrow-right-bold" style="font-size:14px;"></iconify-icon></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================
+         PAGE: INVENTORY
+    ============================= -->
+    <div class="page-section" :class="{ active: currentPage==='inventory' }">
+      <div class="section-header">
+        <div>
+          <div class="section-title" style="font-size:1.25rem;">Inventaris Bahan</div>
+          <div class="section-sub">Kelola stok bahan baku sulaman Karawo</div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-outline btn-sm">
+            <iconify-icon icon="solar:add-square-bold"></iconify-icon>
+            Tambah Stok
+          </button>
+          <button class="btn btn-primary btn-sm">
+            <iconify-icon icon="solar:add-circle-bold"></iconify-icon>
+            Tambah Bahan
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="filter-bar">
+          <div class="filter-input">
+            <iconify-icon icon="solar:magnifer-bold" style="color:var(--text-light);font-size:16px;"></iconify-icon>
+            <input type="text" placeholder="Cari bahan...">
+          </div>
+          <select class="filter-select">
+            <option>Semua Kategori</option>
+            <option>Benang</option>
+            <option>Kain</option>
+            <option>Aksesoris</option>
+          </select>
+          <select class="filter-select">
+            <option>Semua Status</option>
+            <option>Aman</option>
+            <option>Menipis</option>
+            <option>Habis</option>
+          </select>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nama Bahan</th>
+                <th>Kategori</th>
+                <th>Stok</th>
+                <th>Satuan</th>
+                <th>Min. Stok</th>
+                <th>Status Stok</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="item in inventory" :key="item.id">
+                <tr>
+                  <td>
+                    <div style="font-weight:600;font-size:0.875rem;color:var(--text);" x-text="item.name"></div>
+                  </td>
+                  <td><span class="badge-pill badge-gray" x-text="item.category"></span></td>
+                  <td><span class="mono" style="font-weight:700;" x-text="item.stock"></span></td>
+                  <td x-text="item.unit"></td>
+                  <td><span class="mono" x-text="item.minStock"></span></td>
+                  <td>
+                    <span :class="{
+                      'badge-pill badge-active': item.status==='Aman',
+                      'badge-pill badge-pending': item.status==='Menipis',
+                      'badge-pill badge-inactive': item.status==='Habis'
+                    }" x-text="item.status"></span>
+                  </td>
+                  <td>
+                    <div style="display:flex;gap:6px;">
+                      <button class="btn btn-outline btn-icon btn-sm" style="color:var(--success);">
+                        <iconify-icon icon="solar:add-square-bold" style="font-size:16px;"></iconify-icon>
+                      </button>
+                      <button class="btn btn-outline btn-icon btn-sm">
+                        <iconify-icon icon="solar:pen-bold" style="font-size:16px;"></iconify-icon>
+                      </button>
+                      <button class="btn btn-outline btn-icon btn-sm">
+                        <iconify-icon icon="solar:history-bold" style="font-size:16px;"></iconify-icon>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================
+         PAGE: GALLERY
+    ============================= -->
+    <div class="page-section" :class="{ active: currentPage==='gallery' }">
+      <div class="section-header">
+        <div>
+          <div class="section-title" style="font-size:1.25rem;">Galeri EVDesign</div>
+          <div class="section-sub">Koleksi foto produk dan dokumentasi</div>
+        </div>
+        <button class="btn btn-primary">
+          <iconify-icon icon="solar:cloud-upload-bold"></iconify-icon>
+          Upload Foto
+        </button>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="upload-area" style="padding:24px;">
+          <iconify-icon icon="solar:cloud-upload-bold" style="font-size:40px;display:block;margin:0 auto 10px;"></iconify-icon>
+          <p style="font-size:0.9rem;font-weight:600;">Drag & Drop foto di sini</p>
+          <p style="font-size:0.78rem;margin-top:4px;">atau klik untuk memilih file (PNG, JPG, WEBP - maks 5MB)</p>
+          <button class="btn btn-primary btn-sm" style="margin-top:12px;">
+            <iconify-icon icon="solar:gallery-add-bold"></iconify-icon>
+            Pilih File
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="filter-bar" style="margin-bottom:16px;">
+          <select class="filter-select">
+            <option>Semua Kategori</option>
+            <option>Produk</option>
+            <option>Proses Pembuatan</option>
+            <option>Event</option>
+          </select>
+          <button class="btn btn-danger btn-sm" style="margin-left:auto;">
+            <iconify-icon icon="solar:trash-bin-trash-bold"></iconify-icon>
+            Hapus Terpilih
+          </button>
+        </div>
+
+        <div class="gallery-grid">
+          <template x-for="i in 12" :key="i">
+            <div class="gallery-item">
+              <div :style="`background:hsl(${i*30},40%,${80-(i%3)*10}%);width:100%;height:100%;display:flex;align-items:center;justify-content:center;`">
+                <iconify-icon icon="solar:t-shirt-bold-duotone" style="font-size:48px;opacity:0.4;color:#fc1919;"></iconify-icon>
+              </div>
+              <div class="gallery-item-overlay">
+                <button class="btn btn-icon" style="background:rgba(255,255,255,0.9);color:#212529;border:none;width:36px;height:36px;border-radius:8px;">
+                  <iconify-icon icon="solar:eye-bold" style="font-size:18px;"></iconify-icon>
+                </button>
+                <button class="btn btn-icon" style="background:rgba(255,255,255,0.9);color:#212529;border:none;width:36px;height:36px;border-radius:8px;">
+                  <iconify-icon icon="solar:pen-bold" style="font-size:18px;"></iconify-icon>
+                </button>
+                <button class="btn btn-icon" style="background:rgba(220,53,69,0.9);color:#fff;border:none;width:36px;height:36px;border-radius:8px;">
+                  <iconify-icon icon="solar:trash-bin-trash-bold" style="font-size:18px;"></iconify-icon>
+                </button>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <div style="display:flex;justify-content:center;margin-top:20px;">
+          <div class="pagination">
+            <button class="page-btn" disabled><iconify-icon icon="solar:arrow-left-bold" style="font-size:14px;"></iconify-icon></button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn"><iconify-icon icon="solar:arrow-right-bold" style="font-size:14px;"></iconify-icon></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================
+         PAGE: ARTICLES
+    ============================= -->
+    <div class="page-section" :class="{ active: currentPage==='articles' }">
+      <div class="section-header">
+        <div>
+          <div class="section-title" style="font-size:1.25rem;">Artikel & Berita</div>
+          <div class="section-sub">Konten digital EVDesign</div>
+        </div>
+        <button class="btn btn-primary">
+          <iconify-icon icon="solar:pen-new-square-bold"></iconify-icon>
+          Tulis Artikel
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="filter-bar">
+          <div class="filter-input">
+            <iconify-icon icon="solar:magnifer-bold" style="color:var(--text-light);font-size:16px;"></iconify-icon>
+            <input type="text" placeholder="Cari artikel...">
+          </div>
+          <select class="filter-select">
+            <option>Semua Status</option>
+            <option>Published</option>
+            <option>Draft</option>
+            <option>Archived</option>
+          </select>
+          <select class="filter-select">
+            <option>Semua Kategori</option>
+            <option>Karawo</option>
+            <option>Budaya Gorontalo</option>
+            <option>Tutorial</option>
+            <option>Berita</option>
+          </select>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Judul Artikel</th>
+                <th>Kategori</th>
+                <th>Tanggal</th>
+                <th>Views</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="art in articlesList" :key="art.id">
+                <tr>
+                  <td>
+                    <div style="font-weight:600;font-size:0.875rem;color:var(--text);" x-text="art.title"></div>
+                    <div style="font-size:0.75rem;color:var(--text-light);" x-text="art.excerpt"></div>
+                  </td>
+                  <td><span class="badge-pill badge-gray" x-text="art.category"></span></td>
+                  <td x-text="art.date"></td>
+                  <td><span class="mono" x-text="art.views.toLocaleString()"></span></td>
+                  <td>
+                    <span :class="{
+                      'badge-pill badge-active': art.status==='Published',
+                      'badge-pill badge-pending': art.status==='Draft',
+                      'badge-pill badge-gray': art.status==='Archived'
+                    }" x-text="art.status"></span>
+                  </td>
+                  <td>
+                    <div style="display:flex;gap:6px;">
+                      <button class="btn btn-outline btn-icon btn-sm"><iconify-icon icon="solar:eye-bold" style="font-size:16px;"></iconify-icon></button>
+                      <button class="btn btn-outline btn-icon btn-sm"><iconify-icon icon="solar:pen-bold" style="font-size:16px;"></iconify-icon></button>
+                      <button class="btn btn-icon btn-sm" style="background:rgba(220,53,69,0.1);border:none;color:var(--danger);"><iconify-icon icon="solar:trash-bin-trash-bold" style="font-size:16px;"></iconify-icon></button>
+                    </div>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================
+         PAGE: SETTINGS
+    ============================= -->
+    <div class="page-section" :class="{ active: currentPage==='settings' }">
+      <div class="section-header" style="margin-bottom:24px;">
+        <div>
+          <div class="section-title" style="font-size:1.25rem;">Pengaturan</div>
+          <div class="section-sub">Kelola konfigurasi sistem EVDesign</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active" @click="settingsTab='profile'">Profil Admin</div>
+        <div class="tab" @click="settingsTab='notif'">Pengumuman</div>
+        <div class="tab" @click="settingsTab='log'">Log Aktivitas</div>
+        <div class="tab" @click="settingsTab='backup'">Backup Data</div>
+      </div>
+
+      <!-- Profile Tab -->
+      <div x-show="settingsTab==='profile' || !settingsTab">
+        <div class="grid-2">
+          <div class="card">
+            <div class="section-title" style="margin-bottom:20px;">Informasi Admin</div>
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;">
+              <div class="avatar" style="width:72px;height:72px;font-size:1.5rem;border-radius:16px;">EV</div>
+              <div>
+                <button class="btn btn-outline btn-sm">
+                  <iconify-icon icon="solar:cloud-upload-bold"></iconify-icon>
+                  Ganti Foto
+                </button>
+                <p style="font-size:0.75rem;color:var(--text-light);margin-top:4px;">JPG, PNG maks 2MB</p>
+              </div>
+            </div>
+            <div class="form-group"><label class="form-label">Nama Lengkap</label><input class="form-control" value="Admin EVDesign"></div>
+            <div class="form-group"><label class="form-label">Email</label><input class="form-control" value="admin@evdesign.id" type="email"></div>
+            <div class="form-group"><label class="form-label">Telepon</label><input class="form-control" value="+62 812 3456 7890"></div>
+            <div class="form-group"><label class="form-label">Role</label><input class="form-control" value="Super Admin" disabled style="opacity:0.6;"></div>
+            <button class="btn btn-primary">
+              <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
+              Simpan Perubahan
+            </button>
+          </div>
+          <div class="card">
+            <div class="section-title" style="margin-bottom:20px;">Ubah Password</div>
+            <div class="form-group"><label class="form-label">Password Lama</label><input class="form-control" type="password" placeholder="••••••••"></div>
+            <div class="form-group"><label class="form-label">Password Baru</label><input class="form-control" type="password" placeholder="••••••••"></div>
+            <div class="form-group"><label class="form-label">Konfirmasi Password</label><input class="form-control" type="password" placeholder="••••••••"></div>
+            <button class="btn btn-secondary">
+              <iconify-icon icon="solar:lock-bold"></iconify-icon>
+              Update Password
+            </button>
+
+            <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--border);">
+              <div class="section-title" style="font-size:1rem;margin-bottom:16px;">Preferensi Tampilan</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                <span style="font-size:0.875rem;color:var(--text-sec);">Mode Gelap</span>
+                <label class="toggle"><input type="checkbox" :checked="darkMode" @change="darkMode=!darkMode"><span class="toggle-slider"></span></label>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                <span style="font-size:0.875rem;color:var(--text-sec);">Compact Sidebar</span>
+                <label class="toggle"><input type="checkbox" :checked="sidebarCollapsed" @change="sidebarCollapsed=!sidebarCollapsed"><span class="toggle-slider"></span></label>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:0.875rem;color:var(--text-sec);">Notifikasi Browser</span>
+                <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Log Tab -->
+      <div x-show="settingsTab==='log'">
+        <div class="card">
+          <div class="section-title" style="margin-bottom:20px;">Log Aktivitas Sistem</div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Waktu</th>
+                  <th>Admin</th>
+                  <th>Aksi</th>
+                  <th>Detail</th>
+                  <th>IP Address</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="mono" style="font-size:0.78rem;">2024-01-15 14:32:10</td><td>Admin EVDesign</td><td><span class="badge-pill badge-active">CREATE</span></td><td style="font-size:0.8rem;">Menambahkan produk baru: Kemeja Karawo Premium</td><td class="mono" style="font-size:0.78rem;">192.168.1.1</td></tr>
+                <tr><td class="mono" style="font-size:0.78rem;">2024-01-15 13:15:42</td><td>Admin EVDesign</td><td><span class="badge-pill badge-info-b">UPDATE</span></td><td style="font-size:0.8rem;">Memperbarui status pesanan #INV-056</td><td class="mono" style="font-size:0.78rem;">192.168.1.1</td></tr>
+                <tr><td class="mono" style="font-size:0.78rem;">2024-01-15 12:00:05</td><td>Admin EVDesign</td><td><span class="badge-pill badge-inactive">DELETE</span></td><td style="font-size:0.8rem;">Menghapus foto galeri ID #48</td><td class="mono" style="font-size:0.78rem;">192.168.1.1</td></tr>
+                <tr><td class="mono" style="font-size:0.78rem;">2024-01-15 09:45:22</td><td>Admin EVDesign</td><td><span class="badge-pill badge-active">CREATE</span></td><td style="font-size:0.8rem;">Mendaftarkan perajin baru: Ibu Siti</td><td class="mono" style="font-size:0.78rem;">192.168.1.1</td></tr>
+                <tr><td class="mono" style="font-size:0.78rem;">2024-01-14 17:20:11</td><td>Admin EVDesign</td><td><span class="badge-pill badge-info-b">UPDATE</span></td><td style="font-size:0.8rem;">Memperbarui stok benang sutra merah: +50 gulungan</td><td class="mono" style="font-size:0.78rem;">192.168.1.2</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Backup Tab -->
+      <div x-show="settingsTab==='backup'">
+        <div class="grid-2">
+          <div class="card">
+            <div class="section-title" style="margin-bottom:8px;">Backup Database</div>
+            <p style="font-size:0.875rem;color:var(--text-sec);margin-bottom:20px;">Download salinan lengkap data sistem EVDesign</p>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <button class="btn btn-primary" style="justify-content:center;">
+                <iconify-icon icon="solar:cloud-download-bold"></iconify-icon>
+                Download Backup Lengkap
+              </button>
+              <button class="btn btn-secondary" style="justify-content:center;">
+                <iconify-icon icon="solar:bag-5-bold"></iconify-icon>
+                Backup Produk & Pesanan
+              </button>
+              <button class="btn btn-outline" style="justify-content:center;">
+                <iconify-icon icon="solar:users-group-rounded-bold"></iconify-icon>
+                Backup Data Perajin
+              </button>
+            </div>
+            <div style="margin-top:20px;padding:14px;background:var(--bg);border-radius:10px;">
+              <div style="font-size:0.78rem;color:var(--text-light);">Backup terakhir</div>
+              <div style="font-size:0.875rem;font-weight:600;color:var(--text);margin-top:2px;">15 Januari 2024, 03:00 WIB</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-title" style="margin-bottom:8px;">Auto Backup</div>
+            <p style="font-size:0.875rem;color:var(--text-sec);margin-bottom:20px;">Jadwalkan backup otomatis</p>
+            <div class="form-group">
+              <label class="form-label">Frekuensi Backup</label>
+              <select class="form-control">
+                <option>Setiap Hari (Otomatis)</option>
+                <option>Setiap Minggu</option>
+                <option>Setiap Bulan</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Waktu Backup</label>
+              <input class="form-control" type="time" value="03:00">
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+              <span style="font-size:0.875rem;color:var(--text-sec);">Auto Backup Aktif</span>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <button class="btn btn-primary" style="justify-content:center;width:100%;">
+              <iconify-icon icon="solar:check-circle-bold"></iconify-icon>
+              Simpan Pengaturan
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notification Tab -->
+      <div x-show="settingsTab==='notif'">
+        <div class="card">
+          <div class="section-title" style="margin-bottom:20px;">Kirim Pengumuman ke Perajin</div>
+          <div class="form-group"><label class="form-label">Judul Pengumuman</label><input class="form-control" placeholder="e.g. Jadwal Pertemuan Bulanan"></div>
+          <div class="form-group"><label class="form-label">Penerima</label>
+            <select class="form-control">
+              <option>Semua Perajin (40)</option>
+              <option>Perajin Aktif (34)</option>
+              <option>Wilayah Kota Gorontalo</option>
+              <option>Wilayah Bone Bolango</option>
             </select>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
-      <div class="bg-muted rounded-card pt-5 px-3 pb-3">
-        <h3 class="text-foreground text-lg font-bold ml-3 mb-4">Total Revenue</h3>
-        <div class="bg-white rounded-card p-5">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-foreground text-4xl font-extrabold mb-1">$127K</p>
-              <p class="text-green-600 text-sm font-medium">+23% vs last month</p>
-            </div>
-            <div class="w-16 h-16 bg-accent-lime rounded-icon flex items-center justify-center">
-              <i data-lucide="dollar-sign" class="w-7 h-7 text-foreground"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-muted rounded-card pt-5 px-3 pb-3">
-        <h3 class="text-foreground text-lg font-bold ml-3 mb-4">Active Users</h3>
-        <div class="bg-white rounded-card p-5">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-foreground text-4xl font-extrabold mb-1">24.7K</p>
-              <p class="text-green-600 text-sm font-medium">+12% this week</p>
-            </div>
-            <div class="w-16 h-16 bg-accent-teal rounded-icon flex items-center justify-center">
-              <i data-lucide="users" class="w-7 h-7 text-foreground"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-muted rounded-card pt-5 px-3 pb-3">
-        <h3 class="text-foreground text-lg font-bold ml-3 mb-4">Page Views</h3>
-        <div class="bg-white rounded-card p-5">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-foreground text-4xl font-extrabold mb-1">89.2K</p>
-              <p class="text-blue-600 text-sm font-medium">+5% today</p>
-            </div>
-            <div class="w-16 h-16 bg-accent-peach rounded-icon flex items-center justify-center">
-              <i data-lucide="eye" class="w-7 h-7 text-foreground"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-muted rounded-card pt-5 px-3 pb-3">
-        <h3 class="text-foreground text-lg font-bold ml-3 mb-4">Conversion Rate</h3>
-        <div class="bg-white rounded-card p-5">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-foreground text-4xl font-extrabold mb-1">3.8%</p>
-              <p class="text-red-600 text-sm font-medium">-2% vs target</p>
-            </div>
-            <div class="w-16 h-16 bg-accent-lime rounded-icon flex items-center justify-center">
-              <i data-lucide="trending-up" class="w-7 h-7 text-foreground"></i>
-            </div>
+          <div class="form-group"><label class="form-label">Pesan</label><textarea class="form-control" style="min-height:140px;" placeholder="Tulis pengumuman di sini..."></textarea></div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-outline">Simpan Draft</button>
+            <button class="btn btn-primary">
+              <iconify-icon icon="solar:plain-2-bold"></iconify-icon>
+              Kirim Sekarang
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Charts Row 1 -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 md:mb-8">
-      <!-- Revenue Trend Chart (Line) -->
-      <div class="bg-muted rounded-card pt-5 px-3 pb-3">
-        <h3 class="text-foreground text-lg font-bold ml-3 mb-4">Revenue Trend</h3>
-        <div class="bg-white rounded-card p-4 md:p-5">
-          <div class="w-full overflow-x-auto">
-            <div class="min-w-96 h-80">
-              <canvas id="revenueChart"></canvas>
-            </div>
-          </div>
+    <!-- ============================
+         PAGE: CATEGORIES
+    ============================= -->
+    <div class="page-section" :class="{ active: currentPage==='categories' }">
+      <div class="section-header">
+        <div>
+          <div class="section-title" style="font-size:1.25rem;">Manajemen Kategori</div>
+          <div class="section-sub">6 kategori produk</div>
         </div>
+        <button class="btn btn-primary">
+          <iconify-icon icon="solar:add-circle-bold"></iconify-icon>
+          Tambah Kategori
+        </button>
       </div>
-
-      <!-- User Activity Chart (Bar) -->
-      <div class="bg-muted rounded-card pt-5 px-3 pb-3">
-        <h3 class="text-foreground text-lg font-bold ml-3 mb-4">User Activity</h3>
-        <div class="bg-white rounded-card p-4 md:p-5">
-          <div class="w-full overflow-x-auto">
-            <div class="min-w-96 h-80">
-              <canvas id="activityChart"></canvas>
+      <div class="grid-3">
+        <template x-for="cat in categories" :key="cat.id">
+          <div class="card" style="display:flex;gap:16px;align-items:center;cursor:pointer;" :style="cat.color">
+            <div class="stat-icon" style="width:52px;height:52px;border-radius:14px;">
+              <iconify-icon :icon="cat.icon" style="font-size:28px;"></iconify-icon>
+            </div>
+            <div style="flex:1;">
+              <div style="font-weight:700;font-size:1rem;color:var(--text);" x-text="cat.name"></div>
+              <div style="font-size:0.8rem;color:var(--text-light);" x-text="cat.count+' produk'"></div>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn-outline btn-icon btn-sm"><iconify-icon icon="solar:pen-bold" style="font-size:14px;"></iconify-icon></button>
+              <button class="btn btn-icon btn-sm" style="background:rgba(220,53,69,0.1);border:none;color:var(--danger);"><iconify-icon icon="solar:trash-bin-trash-bold" style="font-size:14px;"></iconify-icon></button>
             </div>
           </div>
-        </div>
+        </template>
       </div>
     </div>
 
-    <!-- Charts Row 2 -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 md:mb-8">
-      <!-- Traffic Sources (Pie) -->
-      <div class="bg-muted rounded-card pt-5 px-3 pb-3">
-        <h3 class="text-foreground text-lg font-bold ml-3 mb-4">Traffic Sources</h3>
-        <div class="bg-white rounded-card p-4 md:p-5">
-          <div class="w-full">
-            <div class="h-64">
-              <canvas id="trafficChart"></canvas>
-            </div>
+    <!-- ============================
+         PAGE: LOGIN
+    ============================= -->
+    <div class="page-section" :class="{ active: currentPage==='login' }" style="position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:300;" x-show="currentPage==='login'">
+      <div style="width:100%;max-width:420px;padding:20px;">
+        <div style="text-align:center;margin-bottom:32px;">
+          <div style="width:64px;height:64px;background:var(--primary);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+            <iconify-icon icon="solar:t-shirt-bold" style="font-size:32px;color:#fff;"></iconify-icon>
           </div>
+          <h2 style="font-size:1.75rem;font-weight:700;color:var(--text);">EVDesign Admin</h2>
+          <p style="color:var(--text-light);margin-top:4px;font-size:0.875rem;">Masuk ke panel administrasi</p>
         </div>
-      </div>
-
-      <!-- Device Types (Doughnut) -->
-      <div class="bg-muted rounded-card pt-5 px-3 pb-3">
-        <h3 class="text-foreground text-lg font-bold ml-3 mb-4">Device Types</h3>
-        <div class="bg-white rounded-card p-4 md:p-5">
-          <div class="w-full">
-            <div class="h-64">
-              <canvas id="deviceChart"></canvas>
-            </div>
+        <div class="card">
+          <div class="form-group"><label class="form-label">Email</label><input class="form-control" type="email" placeholder="admin@evdesign.id"></div>
+          <div class="form-group"><label class="form-label">Password</label><input class="form-control" type="password" placeholder="••••••••"></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+            <label style="display:flex;align-items:center;gap:8px;font-size:0.875rem;cursor:pointer;color:var(--text-sec);">
+              <input type="checkbox" style="accent-color:var(--primary);"> Ingat saya
+            </label>
+            <a href="#" style="font-size:0.875rem;color:var(--primary);font-weight:600;text-decoration:none;">Lupa password?</a>
           </div>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;padding:13px;" @click="navigate('dashboard')">
+            <iconify-icon icon="solar:login-2-bold"></iconify-icon>
+            Masuk
+          </button>
         </div>
-      </div>
-
-      <!-- Top Performing Pages -->
-      <div class="bg-muted rounded-card pt-5 px-3 pb-3">
-        <h3 class="text-foreground text-lg font-bold ml-3 mb-4">Top Pages</h3>
-        <div class="bg-white rounded-card p-4 md:p-5">
-          <div class="space-y-4">
-            <div class="flex items-center justify-between pb-3 border-b border-gray-100">
-              <div class="flex-1 min-w-0">
-                <p class="text-foreground font-semibold text-sm truncate">/dashboard</p>
-                <p class="text-gray-500 text-xs">Homepage</p>
-              </div>
-              <div class="text-right">
-                <p class="text-foreground font-bold text-sm">12.4K</p>
-                <p class="text-green-600 text-xs">+8%</p>
-              </div>
-            </div>
-            <div class="flex items-center justify-between pb-3 border-b border-gray-100">
-              <div class="flex-1 min-w-0">
-                <p class="text-foreground font-semibold text-sm truncate">/products</p>
-                <p class="text-gray-500 text-xs">Product catalog</p>
-              </div>
-              <div class="text-right">
-                <p class="text-foreground font-bold text-sm">9.2K</p>
-                <p class="text-green-600 text-xs">+15%</p>
-              </div>
-            </div>
-            <div class="flex items-center justify-between pb-3 border-b border-gray-100">
-              <div class="flex-1 min-w-0">
-                <p class="text-foreground font-semibold text-sm truncate">/checkout</p>
-                <p class="text-gray-500 text-xs">Checkout page</p>
-              </div>
-              <div class="text-right">
-                <p class="text-foreground font-bold text-sm">6.8K</p>
-                <p class="text-blue-600 text-xs">+3%</p>
-              </div>
-            </div>
-            <div class="flex items-center justify-between">
-              <div class="flex-1 min-w-0">
-                <p class="text-foreground font-semibold text-sm truncate">/about</p>
-                <p class="text-gray-500 text-xs">About us</p>
-              </div>
-              <div class="text-right">
-                <p class="text-foreground font-bold text-sm">4.1K</p>
-                <p class="text-red-600 text-xs">-2%</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <p style="text-align:center;margin-top:16px;font-size:0.78rem;color:var(--text-light);">© 2024 EVDesign · Pelestarian Wastra Gorontalo</p>
       </div>
     </div>
 
-    <!-- Exportable Reports Section -->
-    <div class="bg-muted rounded-card pt-5 px-3 pb-3">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4 px-3">
-        <h3 class="text-foreground text-lg font-bold">Exportable Reports</h3>
-        <a href="#" class="cursor-pointer"><span class="text-sm text-primary hover:underline">Manage Templates</span></a>
-      </div>
-      <div class="bg-white rounded-card p-4 md:p-5">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <!-- Revenue Report -->
-          <div class="border border-border rounded-button p-4 hover:border-primary transition-all duration-200">
-            <div class="flex items-start gap-3">
-              <div class="w-12 h-12 bg-success-light rounded-lg flex items-center justify-center flex-shrink-0">
-                <i data-lucide="dollar-sign" class="w-6 h-6 text-success-dark"></i>
-              </div>
-              <div class="flex-1 min-w-0">
-                <h4 class="text-foreground font-bold text-sm mb-1">Revenue Report</h4>
-                <p class="text-gray-500 text-xs mb-3 line-clamp-2">Comprehensive revenue analysis with trends, forecasts, and comparisons</p>
-                <div class="flex items-center gap-2">
-                  <button onclick="exportReport('revenue')" class="text-primary text-xs font-medium hover:underline cursor-pointer">Export PDF</button>
-                  <span class="text-gray-300">•</span>
-                  <button onclick="exportReport('revenue-excel')" class="text-primary text-xs font-medium hover:underline cursor-pointer">Export Excel</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- User Analytics Report -->
-          <div class="border border-border rounded-button p-4 hover:border-primary transition-all duration-200">
-            <div class="flex items-start gap-3">
-              <div class="w-12 h-12 bg-info-light rounded-lg flex items-center justify-center flex-shrink-0">
-                <i data-lucide="users" class="w-6 h-6 text-info-dark"></i>
-              </div>
-              <div class="flex-1 min-w-0">
-                <h4 class="text-foreground font-bold text-sm mb-1">User Analytics</h4>
-                <p class="text-gray-500 text-xs mb-3 line-clamp-2">Detailed user behavior, demographics, and engagement metrics</p>
-                <div class="flex items-center gap-2">
-                  <button onclick="exportReport('users')" class="text-primary text-xs font-medium hover:underline cursor-pointer">Export PDF</button>
-                  <span class="text-gray-300">•</span>
-                  <button onclick="exportReport('users-excel')" class="text-primary text-xs font-medium hover:underline cursor-pointer">Export Excel</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Traffic Report -->
-          <div class="border border-border rounded-button p-4 hover:border-primary transition-all duration-200">
-            <div class="flex items-start gap-3">
-              <div class="w-12 h-12 bg-warning-light rounded-lg flex items-center justify-center flex-shrink-0">
-                <i data-lucide="globe" class="w-6 h-6 text-warning-dark"></i>
-              </div>
-              <div class="flex-1 min-w-0">
-                <h4 class="text-foreground font-bold text-sm mb-1">Traffic Analysis</h4>
-                <p class="text-gray-500 text-xs mb-3 line-clamp-2">Website traffic sources, page performance, and visitor insights</p>
-                <div class="flex items-center gap-2">
-                  <button onclick="exportReport('traffic')" class="text-primary text-xs font-medium hover:underline cursor-pointer">Export PDF</button>
-                  <span class="text-gray-300">•</span>
-                  <button onclick="exportReport('traffic-excel')" class="text-primary text-xs font-medium hover:underline cursor-pointer">Export Excel</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Performance Report -->
-          <div class="border border-border rounded-button p-4 hover:border-primary transition-all duration-200">
-            <div class="flex items-start gap-3">
-              <div class="w-12 h-12 bg-alert-light rounded-lg flex items-center justify-center flex-shrink-0">
-                <i data-lucide="trending-up" class="w-6 h-6 text-alert-dark"></i>
-              </div>
-              <div class="flex-1 min-w-0">
-                <h4 class="text-foreground font-bold text-sm mb-1">Performance Report</h4>
-                <p class="text-gray-500 text-xs mb-3 line-clamp-2">KPI tracking, goal completion, and performance benchmarks</p>
-                <div class="flex items-center gap-2">
-                  <button onclick="exportReport('performance')" class="text-primary text-xs font-medium hover:underline cursor-pointer">Export PDF</button>
-                  <span class="text-gray-300">•</span>
-                  <button onclick="exportReport('performance-excel')" class="text-primary text-xs font-medium hover:underline cursor-pointer">Export Excel</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Custom Report -->
-          <div class="border border-border rounded-button p-4 hover:border-primary transition-all duration-200">
-            <div class="flex items-start gap-3">
-              <div class="w-12 h-12 bg-error-light rounded-lg flex items-center justify-center flex-shrink-0">
-                <i data-lucide="settings" class="w-6 h-6 text-error-dark"></i>
-              </div>
-              <div class="flex-1 min-w-0">
-                <h4 class="text-foreground font-bold text-sm mb-1">Custom Report</h4>
-                <p class="text-gray-500 text-xs mb-3 line-clamp-2">Build your own report with custom metrics and date ranges</p>
-                <div class="flex items-center gap-2">
-                  <button onclick="openCustomReport()" class="text-primary text-xs font-medium hover:underline cursor-pointer">Create Report</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Scheduled Reports -->
-          <div class="border border-border rounded-button p-4 hover:border-primary transition-all duration-200">
-            <div class="flex items-start gap-3">
-              <div class="w-12 h-12 bg-accent-teal/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                <i data-lucide="calendar" class="w-6 h-6 text-foreground"></i>
-              </div>
-              <div class="flex-1 min-w-0">
-                <h4 class="text-foreground font-bold text-sm mb-1">Scheduled Reports</h4>
-                <p class="text-gray-500 text-xs mb-3 line-clamp-2">Automatically generated reports delivered to your inbox</p>
-                <div class="flex items-center gap-2">
-                  <button onclick="manageScheduled()" class="text-primary text-xs font-medium hover:underline cursor-pointer">Manage Schedule</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-</div>
-
-<!-- Export Progress Modal -->
-<div id="exportModal" class="fixed inset-0 bg-black/50 z-[100] hidden flex items-center justify-center p-4">
-  <div class="bg-white rounded-card p-6 max-w-sm w-full text-center">
-    <div class="w-16 h-16 bg-info-light rounded-full flex items-center justify-center mx-auto mb-4">
-      <i data-lucide="download" class="w-8 h-8 text-info-dark"></i>
-    </div>
-    <h3 class="text-foreground text-xl font-bold mb-2">Exporting Report</h3>
-    <p class="text-gray-500 text-sm mb-6">Please wait while we prepare your report...</p>
-    <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
-      <div id="exportProgress" class="bg-primary h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
-    </div>
-    <button onclick="closeExportModal()" class="w-full px-4 py-2.5 border border-border rounded-button text-foreground font-medium hover:border-primary transition-all duration-200 cursor-pointer">
-      Cancel
-    </button>
-  </div>
-</div>
-
-<!-- Page Not Found Modal -->
-<div id="page-not-found-modal" class="fixed inset-0 bg-black/50 z-[100] hidden flex items-center justify-center p-4">
-  <div class="bg-white rounded-card p-6 max-w-sm w-full text-center">
-    <div class="w-16 h-16 bg-warning-light rounded-full flex items-center justify-center mx-auto mb-4">
-      <i data-lucide="alert-triangle" class="w-8 h-8 text-warning-dark"></i>
-    </div>
-    <h3 class="text-foreground text-xl font-bold mb-2">Feature Not Available</h3>
-    <p class="text-gray-500 text-sm mb-6">This feature is currently under development.</p>
-    <button onclick="closePageNotFoundModal()" class="w-full px-4 py-2.5 bg-primary text-white rounded-button font-medium hover:bg-primary-hover transition-all duration-200 cursor-pointer">
-      Got it
-    </button>
-  </div>
-</div>
+  </div><!-- .content -->
+</main>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  lucide.createIcons();
-  initializeCharts();
+function dashboardApp() {
+  return {
+    darkMode: false,
+    sidebarCollapsed: false,
+    mobileSidebarOpen: false,
+    isMobile: window.innerWidth < 1024,
+    currentPage: 'dashboard',
+    pageTitle: 'Dashboard Utama',
+    showAddProduct: false,
+    settingsTab: 'profile',
+    currentDate: '',
+    currentTime: '',
 
-  document.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      document.getElementById('page-not-found-modal').classList.remove('hidden');
-    });
-  });
-});
-
-function closePageNotFoundModal() {
-  document.getElementById('page-not-found-modal').classList.add('hidden');
-}
-
-function toggleSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
-  sidebar.classList.toggle('-translate-x-full');
-  overlay.classList.toggle('hidden');
-  document.body.classList.toggle('overflow-hidden');
-}
-
-// Chart initialization
-function initializeCharts() {
-  // Revenue Trend Chart (Line)
-  new Chart(document.getElementById('revenueChart'), {
-    type: 'line',
-    data: {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-      datasets: [{
-        label: 'Revenue ($K)',
-        data: [42, 55, 48, 67, 58, 72],
-        borderColor: '#EF3F09',
-        backgroundColor: 'rgba(239, 63, 9, 0.1)',
-        fill: true,
-        tension: 0.4,
-        pointBackgroundColor: '#EF3F09',
-        pointBorderColor: '#fff',
-        pointBorderWidth: 2
-      }]
+    pageTitles: {
+      dashboard: 'Dashboard Utama',
+      products: 'Manajemen Produk',
+      categories: 'Manajemen Kategori',
+      artisans: 'Binaan / Perajin',
+      orders: 'Pesanan & Orders',
+      inventory: 'Inventaris Bahan',
+      gallery: 'Galeri',
+      articles: 'Artikel & Berita',
+      settings: 'Pengaturan',
+      login: 'Login'
     },
-    options: {
-      animation: false,
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: {
-            usePointStyle: true,
-            padding: 20
-          }
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            callback: function(value) { return '$' + value + 'K'; }
+
+    navigate(page) {
+      this.currentPage = page;
+      this.pageTitle = this.pageTitles[page] || page;
+      this.mobileSidebarOpen = false;
+      if (page === 'dashboard') { this.$nextTick(() => this.initCharts()); }
+    },
+
+    toggleSidebar() {
+      if (this.isMobile) { this.mobileSidebarOpen = !this.mobileSidebarOpen; }
+      else { this.sidebarCollapsed = !this.sidebarCollapsed; }
+    },
+
+    updateDateTime() {
+      const now = new Date();
+      this.currentDate = now.toLocaleDateString('id-ID', { weekday:'short', day:'2-digit', month:'short', year:'numeric' });
+      this.currentTime = now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+    },
+
+    // MOCK DATA
+    products: [
+      { id:1, name:'Kemeja Karawo Premium', sku:'KMJ-001', category:'Kemeja', price:450000, stock:24, status:'Aktif', color:'#fc1919' },
+      { id:2, name:'Selendang Motif Padi', sku:'SLD-001', category:'Selendang', price:280000, stock:18, status:'Aktif', color:'#28A745' },
+      { id:3, name:'Blouse Karawo Elegan', sku:'BLS-001', category:'Blouse', price:380000, stock:12, status:'Aktif', color:'#17A2B8' },
+      { id:4, name:'Tas Tangan Karawo', sku:'TAS-001', category:'Tas', price:320000, stock:8, status:'Aktif', color:'#FFC107' },
+      { id:5, name:'Sarung Karawo Tradisional', sku:'SRG-001', category:'Sarung', price:420000, stock:3, status:'Aktif', color:'#6C757D' },
+      { id:6, name:'Kemeja Anak Karawo', sku:'KMJ-002', category:'Kemeja', price:250000, stock:0, status:'Non-aktif', color:'#495057' },
+      { id:7, name:'Kerudung Sulam Karawo', sku:'KRD-001', category:'Aksesori', price:180000, stock:32, status:'Aktif', color:'#fc1919' },
+      { id:8, name:'Sepatu Motif Karawo', sku:'SPT-001', category:'Aksesori', price:650000, stock:6, status:'Aktif', color:'#17A2B8' },
+      { id:9, name:'Dompet Karawo Mini', sku:'DMP-001', category:'Tas', price:120000, stock:45, status:'Aktif', color:'#28A745' },
+      { id:10, name:'Blouse Casual Karawo', sku:'BLS-002', category:'Blouse', price:310000, stock:2, status:'Non-aktif', color:'#FFC107' },
+    ],
+
+    artisans: [
+      { id:1, name:'Ibu Fatimah', initials:'IF', color:'#fc1919', group:'Kelompok A', address:'Kota Gorontalo', phone:'081234567891', joined:'Jan 2020', products:34, status:'Aktif' },
+      { id:2, name:'Ibu Siti Rahma', initials:'SR', color:'#28A745', group:'Kelompok B', address:'Bone Bolango', phone:'081234567892', joined:'Mar 2020', products:28, status:'Aktif' },
+      { id:3, name:'Ibu Nur Hakim', initials:'NH', color:'#17A2B8', group:'Kelompok A', address:'Kota Gorontalo', phone:'081234567893', joined:'Jun 2020', products:22, status:'Aktif' },
+      { id:4, name:'Ibu Hasna', initials:'HN', color:'#FFC107', group:'Kelompok C', address:'Gorontalo Utara', phone:'081234567894', joined:'Sep 2020', products:19, status:'Cuti' },
+      { id:5, name:'Ibu Yanti', initials:'YT', color:'#6C757D', group:'Kelompok B', address:'Bone Bolango', phone:'081234567895', joined:'Dec 2020', products:15, status:'Aktif' },
+      { id:6, name:'Ibu Mariati', initials:'MT', color:'#fc1919', group:'Kelompok C', address:'Gorontalo Utara', phone:'081234567896', joined:'Feb 2021', products:12, status:'Non-aktif' },
+      { id:7, name:'Ibu Dian Sari', initials:'DS', color:'#28A745', group:'Kelompok A', address:'Kota Gorontalo', phone:'081234567897', joined:'Apr 2021', products:27, status:'Aktif' },
+      { id:8, name:'Ibu Rini Harun', initials:'RH', color:'#17A2B8', group:'Kelompok D', address:'Pohuwato', phone:'081234567898', joined:'Jul 2021', products:9, status:'Cuti' },
+    ],
+
+    orders: [
+      { id:1, invoice:'#INV-056', date:'15 Jan 2024', customer:'Ahmad Budi', city:'Jakarta', total:900000, payment:'Transfer Bank', status:'Baru' },
+      { id:2, invoice:'#INV-055', date:'14 Jan 2024', customer:'Sari Dewi', city:'Surabaya', total:560000, payment:'QRIS', status:'Diproses' },
+      { id:3, invoice:'#INV-054', date:'14 Jan 2024', customer:'Hendra Wijaya', city:'Bandung', total:1250000, payment:'Transfer Bank', status:'Dikirim' },
+      { id:4, invoice:'#INV-053', date:'13 Jan 2024', customer:'Rina Mahendra', city:'Gorontalo', total:420000, payment:'COD', status:'Selesai' },
+      { id:5, invoice:'#INV-052', date:'13 Jan 2024', customer:'Budi Santoso', city:'Medan', total:780000, payment:'QRIS', status:'Selesai' },
+      { id:6, invoice:'#INV-051', date:'12 Jan 2024', customer:'Dewi Rahayu', city:'Makassar', total:340000, payment:'Transfer Bank', status:'Dibatalkan' },
+      { id:7, invoice:'#INV-050', date:'12 Jan 2024', customer:'Rudi Hermawan', city:'Yogyakarta', total:650000, payment:'QRIS', status:'Baru' },
+      { id:8, invoice:'#INV-049', date:'11 Jan 2024', customer:'Lina Susanti', city:'Semarang', total:1100000, payment:'Transfer Bank', status:'Diproses' },
+    ],
+
+    inventory: [
+      { id:1, name:'Benang Sutra Merah', category:'Benang', stock:15, unit:'Gulungan', minStock:50, status:'Menipis' },
+      { id:2, name:'Benang Emas No.8', category:'Benang', stock:30, unit:'Gulungan', minStock:100, status:'Menipis' },
+      { id:3, name:'Kain Putih Halus', category:'Kain', stock:2, unit:'Meter', minStock:20, status:'Menipis' },
+      { id:4, name:'Benang Sutra Biru', category:'Benang', stock:120, unit:'Gulungan', minStock:50, status:'Aman' },
+      { id:5, name:'Kain Sutra Kuning', category:'Kain', stock:0, unit:'Meter', minStock:10, status:'Habis' },
+      { id:6, name:'Jarum Sulam No.12', category:'Aksesoris', stock:200, unit:'Pcs', minStock:50, status:'Aman' },
+      { id:7, name:'Benang Perak No.12', category:'Benang', stock:25, unit:'Gulungan', minStock:80, status:'Menipis' },
+      { id:8, name:'Kain Satin Putih', category:'Kain', stock:45, unit:'Meter', minStock:20, status:'Aman' },
+    ],
+
+    articlesList: [
+      { id:1, title:'Karawo: Warisan Budaya Gorontalo yang Mendunia', excerpt:'Sulaman karawo kini semakin dikenal...', category:'Karawo', date:'15 Jan 2024', views:1240, status:'Published' },
+      { id:2, title:'Teknik Dasar Sulam Karawo untuk Pemula', excerpt:'Panduan lengkap memulai sulam karawo...', category:'Tutorial', date:'12 Jan 2024', views:892, status:'Published' },
+      { id:3, title:'Koleksi Terbaru EVDesign 2024', excerpt:'Temukan inspirasi fashion terkini...', category:'Berita', date:'10 Jan 2024', views:654, status:'Published' },
+      { id:4, title:'Perajin EVDesign Tampil di Jakarta Fashion Week', excerpt:'Kebanggaan Gorontalo tampil di panggung...', category:'Berita', date:'05 Jan 2024', views:2341, status:'Published' },
+      { id:5, title:'Motif-motif Karawo dan Maknanya', excerpt:'Setiap motif memiliki filosofi mendalam...', category:'Karawo', date:'02 Jan 2024', views:445, status:'Draft' },
+      { id:6, title:'Cara Merawat Kain Karawo agar Tetap Awet', excerpt:'Tips perawatan kain sulam...', category:'Tutorial', date:'30 Des 2023', views:321, status:'Draft' },
+    ],
+
+    categories: [
+      { id:1, name:'Kemeja', count:32, icon:'solar:t-shirt-bold-duotone', color:'' },
+      { id:2, name:'Blouse', count:24, icon:'solar:t-shirt-2-bold-duotone', color:'' },
+      { id:3, name:'Selendang', count:18, icon:'solar:layers-bold-duotone', color:'' },
+      { id:4, name:'Tas', count:22, icon:'solar:bag-2-bold-duotone', color:'' },
+      { id:5, name:'Sarung', count:15, icon:'solar:layers-minimalistic-bold-duotone', color:'' },
+      { id:6, name:'Aksesori', count:13, icon:'solar:star-bold-duotone', color:'' },
+    ],
+
+    charts: {},
+
+    initCharts() {
+      // Cleanup
+      Object.values(this.charts).forEach(c => { if (c) c.destroy(); });
+      this.charts = {};
+
+      Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+
+      const isDark = this.darkMode;
+      const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+      const textColor = isDark ? '#94A3B8' : '#6C757D';
+
+      // Sales Line Chart
+      const salesCtx = document.getElementById('salesChart');
+      if (salesCtx) {
+        this.charts.sales = new Chart(salesCtx, {
+          type: 'line',
+          data: {
+            labels: ['Feb','Mar','Apr','Mei','Jun','Jul','Agt','Sep','Okt','Nov','Des','Jan'],
+            datasets: [{
+              label: 'Pendapatan (Juta Rp)',
+              data: [18, 22, 19, 28, 25, 32, 29, 35, 31, 38, 42, 45.8],
+              borderColor: '#fc1919',
+              backgroundColor: 'rgba(252,25,25,0.08)',
+              fill: true,
+              tension: 0.4,
+              pointBackgroundColor: '#fc1919',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              pointRadius: 5,
+              pointHoverRadius: 7,
+            }]
           },
-          grid: {
-            color: 'rgba(0,0,0,0.1)'
-          }
-        },
-        x: {
-          grid: {
-            display: false
-          }
-        }
-      }
-    }
-  });
-
-  // User Activity Chart (Bar)
-  new Chart(document.getElementById('activityChart'), {
-    type: 'bar',
-    data: {
-      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-      datasets: [{
-        label: 'Active Users',
-        data: [28, 34, 45, 52, 48, 35, 29],
-        backgroundColor: '#82D9D7',
-        borderColor: '#5BCCCA',
-        borderWidth: 1,
-        borderRadius: 8
-      }]
-    },
-    options: {
-      animation: false,
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: {
-            usePointStyle: true,
-            padding: 20
-          }
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            callback: function(value) { return value + 'K'; }
-          },
-          grid: {
-            color: 'rgba(0,0,0,0.1)'
-          }
-        },
-        x: {
-          grid: {
-            display: false
-          }
-        }
-      }
-    }
-  });
-
-  // Traffic Sources Chart (Pie)
-  new Chart(document.getElementById('trafficChart'), {
-    type: 'pie',
-    data: {
-      labels: ['Organic Search', 'Direct', 'Social Media', 'Email', 'Referral'],
-      datasets: [{
-        data: [35, 25, 20, 12, 8],
-        backgroundColor: [
-          '#EF3F09',
-          '#82D9D7',
-          '#FAAC7B',
-          '#C5E151',
-          '#A855F7'
-        ],
-        borderWidth: 2,
-        borderColor: '#fff'
-      }]
-    },
-    options: {
-      animation: false,
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: {
-            usePointStyle: true,
-            padding: 15,
-            font: {
-              size: 12
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: '#fff',
+                titleColor: '#212529',
+                bodyColor: '#fc1919',
+                borderColor: '#fc1919',
+                borderWidth: 1,
+                callbacks: { label: ctx => 'Rp ' + ctx.raw + ' Juta' }
+              }
+            },
+            scales: {
+              x: { grid: { color: gridColor }, ticks: { color: textColor } },
+              y: { grid: { color: gridColor }, ticks: { color: textColor, callback: v => 'Rp '+v+'Jt' } }
             }
           }
-        }
+        });
       }
-    }
-  });
 
-  // Device Types Chart (Doughnut)
-  new Chart(document.getElementById('deviceChart'), {
-    type: 'doughnut',
-    data: {
-      labels: ['Desktop', 'Mobile', 'Tablet'],
-      datasets: [{
-        data: [45, 40, 15],
-        backgroundColor: [
-          '#C5E151',
-          '#82D9D7',
-          '#FAAC7B'
-        ],
-        borderWidth: 3,
-        borderColor: '#fff'
-      }]
-    },
-    options: {
-      animation: false,
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '60%',
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: {
-            usePointStyle: true,
-            padding: 15,
-            font: {
-              size: 12
+      // Category Bar Chart
+      const catCtx = document.getElementById('categoryChart');
+      if (catCtx) {
+        this.charts.category = new Chart(catCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Kemeja','Blouse','Selendang','Tas','Sarung','Aksesori'],
+            datasets: [{
+              label: 'Unit Terjual',
+              data: [48, 35, 28, 22, 19, 15],
+              backgroundColor: ['#fc1919','#28A745','#17A2B8','#FFC107','#6C757D','#DC3545'],
+              borderRadius: 6,
+            }]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: '#fff',
+                titleColor: '#212529',
+                bodyColor: '#495057',
+                borderColor: '#fc1919',
+                borderWidth: 1,
+              }
+            },
+            scales: {
+              x: { grid: { display: false }, ticks: { color: textColor } },
+              y: { grid: { color: gridColor }, ticks: { color: textColor } }
             }
           }
-        }
+        });
       }
-    }
-  });
-}
 
-// Date range functions
-function applyQuickRange() {
-  const quickRange = document.getElementById('quickRange').value;
-  const endDate = new Date();
-  const startDate = new Date();
-  
-  const endInput = document.getElementById('endDate');
-  const startInput = document.getElementById('startDate');
-  
-  endInput.value = endDate.toISOString().split('T')[0];
-  
-  switch(quickRange) {
-    case '7d':
-      startDate.setDate(endDate.getDate() - 7);
-      break;
-    case '30d':
-      startDate.setDate(endDate.getDate() - 30);
-      break;
-    case '90d':
-      startDate.setDate(endDate.getDate() - 90);
-      break;
-    case '1y':
-      startDate.setFullYear(endDate.getFullYear() - 1);
-      break;
-    default:
-      return;
+      // Artisan Pie
+      const pieCtx = document.getElementById('artisanPieChart');
+      if (pieCtx) {
+        this.charts.pie = new Chart(pieCtx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Kota Gorontalo','Bone Bolango','Gorontalo Utara','Pohuwato','Boalemo'],
+            datasets: [{
+              data: [16, 12, 7, 3, 2],
+              backgroundColor: ['#fc1919','#28A745','#17A2B8','#FFC107','#6C757D'],
+              borderWidth: 0,
+              hoverOffset: 6,
+            }]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: { color: textColor, padding: 12, font: { size: 12 } }
+              },
+              tooltip: {
+                backgroundColor: '#fff',
+                titleColor: '#212529',
+                bodyColor: '#495057',
+                borderColor: '#fc1919',
+                borderWidth: 1,
+              }
+            },
+            cutout: '65%',
+          }
+        });
+      }
+
+      // Traffic
+      const trafficCtx = document.getElementById('trafficChart');
+      if (trafficCtx) {
+        this.charts.traffic = new Chart(trafficCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Agt','Sep','Okt','Nov','Des','Jan'],
+            datasets: [
+              {
+                label: 'Pengunjung',
+                data: [850, 920, 1040, 1100, 1180, 1240],
+                backgroundColor: '#fc1919',
+                borderRadius: 6,
+              },
+              {
+                label: 'Sesi',
+                data: [640, 720, 800, 880, 940, 1010],
+                backgroundColor: 'rgba(108,117,125,0.4)',
+                borderRadius: 6,
+              }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'top',
+                labels: { color: textColor, font: { size: 12 } }
+              },
+              tooltip: {
+                backgroundColor: '#fff',
+                titleColor: '#212529',
+                bodyColor: '#495057',
+                borderColor: '#fc1919',
+                borderWidth: 1,
+              }
+            },
+            scales: {
+              x: { grid: { display: false }, ticks: { color: textColor } },
+              y: { grid: { color: gridColor }, ticks: { color: textColor } }
+            }
+          }
+        });
+      }
+    },
+
+    init() {
+      this.updateDateTime();
+      setInterval(() => this.updateDateTime(), 1000);
+      this.$nextTick(() => this.initCharts());
+
+      window.addEventListener('resize', () => {
+        this.isMobile = window.innerWidth < 1024;
+        if (!this.isMobile) this.mobileSidebarOpen = false;
+      });
+
+      // Re-init charts on dark mode toggle
+      this.$watch('darkMode', () => {
+        if (this.currentPage === 'dashboard') {
+          setTimeout(() => this.initCharts(), 100);
+        }
+      });
+    }
   }
-  
-  startInput.value = startDate.toISOString().split('T')[0];
-  updateCharts();
-}
-
-function updateCharts() {
-  // Simulate chart data update based on filters
-  console.log('Updating charts with new filters...');
-}
-
-// Export functions
-function exportData() {
-  showExportModal('general');
-}
-
-function generateReport() {
-  showExportModal('report');
-}
-
-function exportReport(type) {
-  showExportModal(type);
-}
-
-function openCustomReport() {
-  document.getElementById('page-not-found-modal').classList.remove('hidden');
-}
-
-function manageScheduled() {
-  document.getElementById('page-not-found-modal').classList.remove('hidden');
-}
-
-function showExportModal(type) {
-  document.getElementById('exportModal').classList.remove('hidden');
-  simulateExport();
-}
-
-function closeExportModal() {
-  document.getElementById('exportModal').classList.add('hidden');
-  document.getElementById('exportProgress').style.width = '0%';
-}
-
-function simulateExport() {
-  let progress = 0;
-  const progressBar = document.getElementById('exportProgress');
-  
-  const interval = setInterval(() => {
-    progress += Math.random() * 30;
-    if (progress >= 100) {
-      progress = 100;
-      clearInterval(interval);
-      setTimeout(() => {
-        closeExportModal();
-      }, 500);
-    }
-    progressBar.style.width = progress + '%';
-  }, 200);
 }
 </script>
 </body>
